@@ -84,7 +84,7 @@
             <input id="flowerName" placeholder="🌸 Tên hoa" class="border rounded-2xl p-4"/>
             <select id="flowerType" class="border rounded-2xl p-4"><option value="xu">🌸 Hoa xu</option><option value="goi">🪙 Hoa gói</option></select>
             <select id="flowerRarity" class="border rounded-2xl p-4"><option>HOA ĐỎ</option><option>HOA CAM</option><option>HOA TÍM</option><option>HOA LAM</option><option>HOA LỤC</option></select>
-            <input id="flowerImage" type="file" accept="image/*" class="border rounded-2xl p-4"/>
+            <input id="flowerImageUrl" placeholder="🔗 Link URL ảnh hoa" class="border rounded-2xl p-4 w-full"/>
         </div>
         <div class="flex gap-4 mt-5 flex-wrap">
             <button onclick="addFlower()" class="bg-yellow-400 text-black px-8 py-4 rounded-2xl font-black text-xl shadow-lg">➕ Thêm dữ liệu</button>
@@ -206,30 +206,62 @@ function editMemName(fi, oi) {
     }
 }
     function editInfo(i) { const n = prompt("Tên mới:", flowers[i].name); if(n) { flowers[i].name=n; saveData(); renderAdminFlowers(); } }
-    function editImg(i) { const input = document.createElement('input'); input.type='file'; input.onchange=e=>{ const r=new FileReader(); r.onload=ev=>{flowers[i].image=ev.target.result; saveData(); renderAdminFlowers();}; r.readAsDataURL(e.target.files[0]); }; input.click(); }
+    function editImg(i) {
+    const newUrl = prompt("Nhập link ảnh mới cho hoa:", flowers[i].image);
+    if(newUrl) {
+        flowers[i].image = newUrl;
+        saveData();
+        renderAdminFlowers();
+        if(window.renderSearch) renderSearch();
+    }
+}
     function delMem(fi, oi) { if(confirm("Xóa thành viên?")) { flowers[fi].owners.splice(oi, 1); saveData(); renderAdminFlowers(); } }
     function delFlow(i) { if(confirm("Xóa hoa này?")) { flowers.splice(i, 1); saveData(); renderAdminFlowers(); } }
     function clearAllFlowers(){ if(confirm('Xóa hết?')){ flowers=[]; saveData(); renderAdminFlowers(); } }
-    function addFlower(){
-        const ingame = document.getElementById('memberName').value.trim();
-        const zalo = document.getElementById('memberZalo').value.trim();
-        const flowerName = document.getElementById('flowerName').value.trim();
-        const img = document.getElementById('flowerImage').files[0];
-        if(!ingame || !flowerName) return alert("Thiếu info!");
-        const exist = flowers.find(f => f.name.trim().toUpperCase() === flowerName.toUpperCase());
-        if(exist) { exist.owners.push({ ingame, zalo }); saveData(); renderAdminFlowers(); alert('Đã cập nhật!'); }
-        else {
-            if(!img) return alert("Chọn ảnh!");
-            const r = new FileReader(); r.onload = e => { flowers.push({ name: flowerName, rarity: document.getElementById('flowerRarity').value, image: e.target.result, flowerXu: document.getElementById('flowerType').value === 'xu' ? 1 : 0, owners: [{ ingame, zalo }] }); saveData(); renderAdminFlowers(); alert("Đã thêm!"); };
-            r.readAsDataURL(img);
-        }
+   function addFlower() {
+    const ingame = document.getElementById('memberName').value.trim();
+    const zalo = document.getElementById('memberZalo').value.trim();
+    const flowerName = document.getElementById('flowerName').value.trim();
+    const imageUrl = document.getElementById('flowerImageUrl').value.trim(); // Lấy từ input text
+
+    // Kiểm tra thông tin bắt buộc
+    if (!ingame || !flowerName || !imageUrl) {
+        return alert("Vui lòng điền đầy đủ tên, link ảnh!");
     }
+
+    const exist = flowers.find(f => f.name.trim().toUpperCase() === flowerName.toUpperCase());
+
+    if (exist) {
+        // Nếu hoa đã tồn tại, chỉ thêm chủ sở hữu mới
+        exist.owners.push({ ingame, zalo });
+        saveData();
+        renderAdminFlowers();
+        alert('Đã cập nhật thành viên cho hoa!');
+    } else {
+        // Nếu là hoa mới, đẩy đối tượng mới vào mảng
+        flowers.push({
+            name: flowerName,
+            rarity: document.getElementById('flowerRarity').value,
+            image: imageUrl, // Lưu thẳng URL vào đây
+            flowerXu: document.getElementById('flowerType').value === 'xu' ? 1 : 0,
+            owners: [{ ingame, zalo }]
+        });
+        saveData();
+        renderAdminFlowers();
+        alert("Đã thêm hoa mới!");
+    }
+    
+    // Tùy chọn: Xóa trắng các ô nhập sau khi thêm xong
+    document.getElementById('memberName').value = '';
+    document.getElementById('flowerName').value = '';
+    document.getElementById('flowerImageUrl').value = '';
+}
     window.addEventListener('load', () => { renderSearch(); renderMembers(); renderAdminFlowers(); });
 </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    onst firebaseConfig = { apiKey: "AIzaSyAip9TsFQLFVYfTCafngZh81W6saGWqEvQ", authDomain: "dvdhoa.firebaseapp.com", projectId: "dvdhoa", storageBucket: "dvdhoa.firebasestorage.app", messagingSenderId: "895700989452", appId: "1:895700989452:web:06ed440fbe3b6aafd1a029", measurementId: "G-2MBFFLEKP3" };
+    const firebaseConfig = { apiKey: "AIzaSyAip9TsFQLFVYfTCafngZh81W6saGWqEvQ", authDomain: "dvdhoa.firebaseapp.com", projectId: "dvdhoa", storageBucket: "dvdhoa.firebasestorage.app", messagingSenderId: "895700989452", appId: "1:895700989452:web:06ed440fbe3b6aafd1a029", measurementId: "G-2MBFFLEKP3" };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const dataRef = doc(db, "dvdflower", "data");
