@@ -131,13 +131,33 @@
       renderSearch(data);
     }
 
-    function showRarity(r){
-        const data = getMergedFlowers().filter(f=>f.rarity===r);
-        document.getElementById('rarityGrid').innerHTML = data.map(f=>`
-        <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
-            <div><div class="flex justify-center"><img src="${f.image}" class="flower-img w-28 h-28 object-contain"/></div><h2 class="text-center text-lg font-black mt-4 text-[#5f412e] leading-tight">${f.name.toUpperCase()}</h2></div>
-            <div class="mt-3 text-center"><div class="bg-white/60 py-1 rounded-full font-bold shadow text-xs text-gray-700">${f.flowerXu?'🪙 Hoa xu':'🎁 Hoa gói'}</div><div class="text-[11px] text-pink-600 font-bold mt-1.5">Sở hữu: ${f.owners.length} 🌸</div></div>
-        </div>`).join('');
+    function showRarity(r) {
+        // Lọc danh sách hoa theo phẩm được chọn
+        const data = getMergedFlowers().filter(f => f.rarity === r);
+        
+        // Tính tổng số loại hoa trong phẩm này
+        const totalCount = data.length;
+
+        // Cập nhật giao diện: Thêm thẻ chứa số lượng ở đầu grid
+        document.getElementById('rarityGrid').innerHTML = `
+            <div class="col-span-full bg-white/50 border border-pink-200 p-4 rounded-2xl shadow-sm text-center font-black text-lg mb-2 text-[#1c5d4d]">
+                🌸 Có tất cả <span class="text-pink-600">${totalCount}</span> loại hoa thuộc phẩm <span class="text-pink-600">${r}</span>
+            </div>
+            ` + data.map(f => `
+            <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-center">
+                        <img src="${f.image}" class="flower-img w-28 h-28 object-contain"/>
+                    </div>
+                    <h2 class="text-center text-lg font-black mt-4 text-[#5f412e] leading-tight">${f.name.toUpperCase()}</h2>
+                </div>
+                <div class="mt-3 text-center">
+                    <div class="bg-white/60 py-1 rounded-full font-bold shadow text-xs text-gray-700">
+                        ${f.flowerXu ? '🪙 Hoa xu' : '🎁 Hoa gói'}
+                    </div>
+                    <div class="text-[11px] text-pink-600 font-bold mt-1.5">Sở hữu: ${f.owners.length} 🌸</div>
+                </div>
+            </div>`).join('');
     }
 
     function showMemberFlowers(memberName){
