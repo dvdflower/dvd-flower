@@ -218,31 +218,41 @@ function editMemName(fi, oi) {
     function delMem(fi, oi) { if(confirm("Xóa thành viên?")) { flowers[fi].owners.splice(oi, 1); saveData(); renderAdminFlowers(); } }
     function delFlow(i) { if(confirm("Xóa hoa này?")) { flowers.splice(i, 1); saveData(); renderAdminFlowers(); } }
     function clearAllFlowers(){ if(confirm('Xóa hết?')){ flowers=[]; saveData(); renderAdminFlowers(); } }
-   function addFlower() {
+  function addFlower() {
     const ingame = document.getElementById('memberName').value.trim();
     const zalo = document.getElementById('memberZalo').value.trim();
     const flowerName = document.getElementById('flowerName').value.trim();
-    const imageUrl = document.getElementById('flowerImageUrl').value.trim(); // Lấy từ input text
+    const imageUrl = document.getElementById('flowerImageUrl').value.trim();
 
-    // Kiểm tra thông tin bắt buộc
-    if (!ingame || !flowerName || !imageUrl) {
-        return alert("Vui lòng điền đầy đủ tên, link ảnh!");
+    // 1. Kiểm tra tên hoa và ingame (bắt buộc)
+    if (!flowerName || !ingame) {
+        return alert("Vui lòng nhập ít nhất Tên hoa và Tên ingame!");
     }
 
     const exist = flowers.find(f => f.name.trim().toUpperCase() === flowerName.toUpperCase());
 
     if (exist) {
-        // Nếu hoa đã tồn tại, chỉ thêm chủ sở hữu mới
+        // Nếu hoa đã tồn tại, thêm chủ sở hữu mới
         exist.owners.push({ ingame, zalo });
+        
+        // Nếu bạn nhập link ảnh mới, cập nhật lại ảnh cho hoa đó
+        if (imageUrl) {
+            exist.image = imageUrl;
+        }
+        
         saveData();
         renderAdminFlowers();
-        alert('Đã cập nhật thành viên cho hoa!');
+        alert('Đã cập nhật thành viên cho hoa: ' + exist.name);
     } else {
-        // Nếu là hoa mới, đẩy đối tượng mới vào mảng
+        // Nếu là hoa mới, bắt buộc phải có link ảnh
+        if (!imageUrl) {
+            return alert("Hoa mới cần có link ảnh!");
+        }
+        
         flowers.push({
             name: flowerName,
             rarity: document.getElementById('flowerRarity').value,
-            image: imageUrl, // Lưu thẳng URL vào đây
+            image: imageUrl,
             flowerXu: document.getElementById('flowerType').value === 'xu' ? 1 : 0,
             owners: [{ ingame, zalo }]
         });
@@ -251,8 +261,9 @@ function editMemName(fi, oi) {
         alert("Đã thêm hoa mới!");
     }
     
-    // Tùy chọn: Xóa trắng các ô nhập sau khi thêm xong
+    // Xóa trắng ô nhập sau khi xong
     document.getElementById('memberName').value = '';
+    document.getElementById('memberZalo').value = '';
     document.getElementById('flowerName').value = '';
     document.getElementById('flowerImageUrl').value = '';
 }
