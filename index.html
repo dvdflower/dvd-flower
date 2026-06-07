@@ -160,16 +160,44 @@
             </div>`).join('');
     }
 
-    function showMemberFlowers(memberName){
-        const data = getMergedFlowers().filter(f=> f.owners.some(o => o.ingame.trim().toLowerCase() === memberName.trim().toLowerCase()));
-        document.getElementById('memberFlowerContent').innerHTML = data.map(f=>`
+    function showMemberFlowers(memberName) {
+        // Lọc tất cả hoa mà thành viên này sở hữu
+        const memberFlowers = getMergedFlowers().filter(f => 
+            f.owners.some(o => o.ingame.trim().toLowerCase() === memberName.trim().toLowerCase())
+        );
+
+        // Tính tổng số lượng theo từng phẩm
+        const stats = {};
+        memberFlowers.forEach(f => {
+            stats[f.rarity] = (stats[f.rarity] || 0) + 1;
+        });
+
+        // Tạo chuỗi HTML cho bảng thống kê
+        let statsHtml = `
+            <div class="col-span-2 md:col-span-4 bg-yellow-50 p-4 rounded-2xl mb-4 border border-yellow-200">
+                <h3 class="font-black text-lg mb-2 text-yellow-800">📊 Thống kê sở hữu:</h3>
+                <div class="flex flex-wrap gap-2">
+                    ${Object.entries(stats).map(([rarity, count]) => `
+                        <div class="bg-white px-3 py-1 rounded-full text-sm font-bold shadow-sm border border-gray-100">
+                            ${rarity}: <span class="text-pink-600">${count}</span>
+                        </div>
+                    `).join('')}
+                    <div class="bg-[#1c5d4d] text-white px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+                        Tổng: <span class="text-yellow-300">${memberFlowers.length}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Render nội dung modal
+        document.getElementById('memberFlowerContent').innerHTML = statsHtml + memberFlowers.map(f => `
             <div class="${rarityClass(f.rarity)} rounded-3xl p-4 shadow-lg">
                 <div class="flex justify-center"><img src="${f.image}" class="w-24 h-24 object-contain"/></div>
                 <h3 class="text-center font-black mt-3 text-[#5f412e]">${f.name.toUpperCase()}</h3>
             </div>`).join('');
-        document.getElementById('memberFlowerModal').style.display='flex';
+        
+        document.getElementById('memberFlowerModal').style.display = 'flex';
     }
-
     function closeMemberModal(){ document.getElementById('memberFlowerModal').style.display='none'; }
 
     function showFlowerOwners(flowerName){
