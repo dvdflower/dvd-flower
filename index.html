@@ -165,7 +165,7 @@
     let flowers = []; 
     let registeredMembers = []; 
     let updateRequests = []; // Danh sách lưu hàng đợi yêu cầu sửa đổi chờ duyệt
-    const adminPass = "DVD123"; 
+    const adminPass = "NN789"; 
     const rarityOrder = { 'HOA ĐỎ': 1, 'HOA CAM': 2, 'HOA TÍM': 3, 'HOA LAM': 4, 'HOA LỤC': 5 };
 
     async function saveData(){ 
@@ -185,10 +185,33 @@
         document.getElementById('tickUserSelect').value = "";
     }
 }
-    function adminLogin(){ 
-        const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
-        if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
+  
+
+function adminLogin(){ 
+    const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
+    if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
+}
+
+// === THÊM ĐOẠN NÀY VÀO ĐÂY ===
+function editFlower(fIdx) {
+    const f = flowers[fIdx];
+    const newName = prompt("Nhập tên hoa mới:", f.name);
+    const newImage = prompt("Nhập link ảnh hoa mới:", f.image);
+    
+    if (newName !== null && newImage !== null) {
+        flowers[fIdx].name = newName.trim();
+        flowers[fIdx].image = newImage.trim();
+        saveData();
+        renderAdminFlowers();
+        renderSearch();
+        alert("Đã cập nhật thông tin hoa thành công!");
     }
+}
+// =============================
+
+function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'?'orange':r==='HOA TÍM'?'purple':r==='HOA LAM'?'blue':'green'); }
+
+// ... (các hàm khác)
 
     function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'?'orange':r==='HOA TÍM'?'purple':r==='HOA LAM'?'blue':'green'); }
 
@@ -516,16 +539,22 @@ function renderAdminFlowers() {
          </div>
       </div>
       
-      <div class="grid grid-cols-2 gap-3 mt-4">
-         <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition flex items-center justify-center gap-1">
-            🧹 Xóa sạch người sở hữu
+      <div class="grid grid-cols-1 gap-2 mt-4">
+         <button onclick="editFlower(${fIdx})" class="bg-blue-500 text-white py-2 rounded-xl text-sm font-black hover:bg-blue-600 transition">
+            ✏️ Sửa tên & ảnh hoa
          </button>
-         <button onclick="delFlow(${fIdx})" class="bg-red-600 text-white py-2 rounded-xl text-sm font-black hover:bg-red-700 transition flex items-center justify-center gap-1">
-            🗑️ Xóa mẫu hoa hệ thống
-         </button>
+         <div class="grid grid-cols-2 gap-2">
+             <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition">
+                🧹 Xóa sạch sở hữu
+             </button>
+             <button onclick="delFlow(${fIdx})" class="bg-red-600 text-white py-2 rounded-xl text-sm font-black hover:bg-red-700 transition">
+                🗑️ Xóa mẫu hoa
+             </button>
+         </div>
       </div>
     </div>`).join('');
 }
+
 
 // HÀM XỬ LÝ XÓA SẠCH TOÀN BỘ THÀNH VIÊN CỦA MỘT BÔNG HOA CỤ THỂ
 function clearAllOwnersFromFlower(flowerIdx, flowerName) {
