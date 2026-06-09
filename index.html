@@ -142,12 +142,19 @@
         </div>
 
         <div class="border-t border-gray-200 my-8 pt-6">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-3xl font-black text-gray-800">📦 Kho dữ liệu hoa gốc hệ thống</h3>
-                <button onclick="clearAllFlowers()" class="bg-red-500 text-white px-6 py-3 rounded-2xl font-black shadow text-sm">🗑️ Xóa toàn bộ hoa</button>
-            </div>
-            <div id="adminFlowerList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+        <h3 class="text-3xl font-black text-gray-800">📦 Kho dữ liệu hoa gốc hệ thống</h3>
+        <div class="flex gap-2">
+            <button onclick="clearAllOwnersFromAllFlowers()" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white px-5 py-3 rounded-2xl font-black shadow text-sm hover:opacity-90 transition">
+                🧹 Reset trống toàn bộ kho hoa
+            </button>
+            <button onclick="clearAllFlowers()" class="bg-red-500 text-white px-5 py-3 rounded-2xl font-black shadow text-sm hover:bg-red-600 transition">
+                🗑️ Xóa toàn bộ mẫu hoa
+            </button>
         </div>
+    </div>
+    <div id="adminFlowerList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+</div>
     </div>
 
     <div id="memberFlowerModal" class="modal"><div class="modal-content rounded-[35px] p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center mb-5"><h2 class="text-3xl font-black">🌸 Hoa thành viên</h2><button onclick="closeMemberModal()" class="bg-red-500 text-white px-4 py-2 rounded-xl">Đóng</button></div><div id="memberFlowerContent" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div></div></div>
@@ -549,8 +556,27 @@ function clearAllOwnersFromFlower(flowerIdx, flowerName) {
         
         renderSearch(); renderMembers(); renderAdminFlowers(); renderAdminMembers(); renderAdminRequests();
     });
+// HÀM XỬ LÝ XOÁ TOÀN BỘ THÀNH VIÊN CỦA TẤT CẢ CÁC LOÀI HOA CÙNG LÚC
+function clearAllOwnersFromAllFlowers() {
+    if (confirm("⚠️ CẢNH BÁO NGUY HIỂM TỪ ADMIN!\nBạn có CỰC KỲ CHẮC CHẮN muốn xóa sạch toàn bộ thành viên sở hữu của TẤT CẢ các loài hoa trên hệ thống không?\n\n(Hành động này sẽ đưa mọi bông hoa về trạng thái 'Hoa trống', nhưng giữ nguyên tên hoa và hình ảnh).")) {
+        
+        // Duyệt qua toàn bộ mảng hoa và reset mảng owners về rỗng
+        flowers.forEach(f => {
+            f.owners = [];
+        });
+        
+        // Lưu dữ liệu vào LocalStorage và đồng bộ thẳng lên Firebase Cloud
+        saveData();
+        
+        // Cập nhật lại giao diện các tab ngay lập tức
+        renderAdminFlowers();
+        renderSearch();
+        
+        alert("✨ Đã gỡ bỏ toàn bộ thành viên sở hữu của tất cả các loài hoa thành công! Kho hoa đã được reset về trống.");
+    }
+}
 </script>
-
+    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
