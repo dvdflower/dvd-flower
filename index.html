@@ -168,16 +168,16 @@
         if(window.saveCloudData) await window.saveCloudData(); 
     }
 
-    function showSection(id){ 
-        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section')); 
-        document.getElementById(id).classList.add('active-section'); 
-        if(id === 'tickSection') {
-            updateTickUserSelect();
-            document.getElementById('tickFlowersArea').classList.add('hidden');
-            document.getElementById('tickUserSelect').value = "";
-        }
+  function showSection(id){ 
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section')); 
+    document.getElementById(id).classList.add('active-section'); 
+    // Luôn luôn cập nhật lại danh sách tên thành viên mỗi khi bấm vào tab gửi yêu cầu
+    if(id === 'tickSection') {
+        updateTickUserSelect();
+        document.getElementById('tickFlowersArea').classList.add('hidden');
+        document.getElementById('tickUserSelect').value = "";
     }
-
+}
     function adminLogin(){ 
         const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
         if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
@@ -529,24 +529,27 @@
     const db = getFirestore(app);
     const dataRef = doc(db, "dvdflower", "data");
     
-    onSnapshot(dataRef, (snap) => { 
-        if(snap.exists()){ 
-            const cloudData = snap.data();
-            flowers = cloudData.flowers || []; 
-            registeredMembers = cloudData.registeredMembers || []; 
-            updateRequests = cloudData.updateRequests || []; // Đồng bộ hàng đợi yêu cầu sửa
-            
-            localStorage.setItem('dvdFlowers', JSON.stringify(flowers)); 
-            localStorage.setItem('dvdMembers', JSON.stringify(registeredMembers)); 
-            localStorage.setItem('dvdRequests', JSON.stringify(updateRequests)); 
-            
-            renderSearch(); 
-            renderMembers(); 
-            renderAdminFlowers(); 
-            renderAdminMembers();
-            renderAdminRequests();
-        } 
-    });
+   onSnapshot(dataRef, (snap) => { 
+    if(snap.exists()){ 
+        const cloudData = snap.data();
+        flowers = cloudData.flowers || []; 
+        registeredMembers = cloudData.registeredMembers || []; 
+        updateRequests = cloudData.updateRequests || []; 
+        
+        localStorage.setItem('dvdFlowers', JSON.stringify(flowers)); 
+        localStorage.setItem('dvdMembers', JSON.stringify(registeredMembers)); 
+        localStorage.setItem('dvdRequests', JSON.stringify(updateRequests)); 
+        
+        renderSearch(); 
+        renderMembers(); 
+        renderAdminFlowers(); 
+        renderAdminMembers();
+        renderAdminRequests();
+        
+        // CHÈN THÊM DÒNG NÀY VÀO ĐÂY:
+        updateTickUserSelect(); 
+    } 
+});
     
     window.saveCloudData = async function(){ 
         await setDoc(dataRef, { 
