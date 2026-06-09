@@ -14,7 +14,11 @@
         @keyframes sakuraMove{ 0%{ transform:translateX(0); } 100%{ transform:translateX(130vw); } }
         @keyframes sakuraMove2{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-130vw); } }
         .section{ display:none; } .active-section{ display:block; }
-        .header-box{ background: linear-gradient( 135deg, #0c4c3d, #196953 ); position:relative; overflow:hidden; }
+        ..header-box { 
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
+    position: relative; 
+    overflow: hidden; 
+}
         .header-box::after{ content:'🌸'; position:absolute; right:20px; top:10px; font-size:130px; opacity:.08; }
         .menu-btn{ transition:.25s; position:relative; overflow:hidden; }
         .menu-btn:hover{ transform: translateY(-4px) scale(1.02); }
