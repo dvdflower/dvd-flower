@@ -90,24 +90,34 @@
     <div id="tickSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
     <h2 class="text-4xl font-black text-pink-600 mb-6">📌 Đăng ký & Tích chọn hoa</h2>
     
-    <div class="bg-blue-50 p-6 rounded-3xl mb-8 border border-blue-200">
-        <h3 class="text-2xl font-black text-blue-800 mb-4">📝 Thông tin của bạn</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input id="newMemberName" placeholder="🎮 Tên Ingame (Bắt buộc)" class="border rounded-2xl p-4 font-bold"/>
-            <input id="newMemberZalo" placeholder="💬 Tên Zalo (Tùy chọn)" class="border rounded-2xl p-4 font-bold"/>
-        </div>
+    <div class="bg-green-50 p-6 rounded-3xl mb-6 border border-green-200">
+        <h3 class="text-xl font-black text-green-800 mb-3">👤 Bạn là thành viên cũ? (Chọn tên để hiện hoa)</h3>
+        <select id="tickUserSelect" onchange="loadUserCurrentStatus()" class="w-full border-2 border-green-300 rounded-2xl p-4 font-bold text-lg">
+            <option value="">-- Bấm chọn tên của bạn --</option>
+        </select>
     </div>
 
-    <h3 class="text-2xl font-black text-gray-700 mb-4">🌸 Chọn những loại hoa bạn đang sở hữu:</h3>
-    <div id="tickFlowersGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"></div>
-    
-    <div class="mt-8 flex justify-center">
-        <button onclick="submitUnifiedRequest()" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-2xl px-12 py-5 rounded-3xl shadow-xl hover:opacity-90 transition transform hover:-translate-y-1">
-            🚀 Gửi yêu cầu đăng ký & Tích hoa
+    <div class="bg-blue-50 p-6 rounded-3xl mb-8 border border-blue-200">
+    <h3 class="text-xl font-black text-blue-800 mb-3">🆕 Bạn là thành viên mới? (Nhập thông tin)</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input id="newMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
+        <input id="newMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
+    </div>
+    <button onclick="showFlowersForNewMember()" class="mt-4 w-full bg-blue-600 text-white p-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition">
+        ✅ Nhập xong: Mở danh sách hoa để chọn
+    </button>
+</div>
+
+    <div id="tickFlowersArea" class="hidden">
+        <h3 class="text-2xl font-black text-gray-700 mb-4">🌸 Chọn hoa bạn đang sở hữu:</h3>
+        <div id="tickFlowersGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"></div>
+        <button onclick="submitUnifiedRequest()" class="mt-8 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-2xl px-12 py-5 rounded-3xl shadow-xl">
+            🚀 Gửi yêu cầu
         </button>
     </div>
 </div>
-    <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
+
+   <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
         <h2 class="text-4xl font-black text-red-700 mb-6">🌷 Hệ Thống Quản Trị Admin Panel</h2>
 
         <div class="bg-yellow-50/50 border-2 border-yellow-200 p-6 rounded-3xl mb-8">
@@ -120,10 +130,9 @@
         <div class="bg-white/50 border border-gray-200 p-6 rounded-3xl mb-8">
             <h3 class="text-2xl font-black mb-4 text-blue-800">👤 Đăng Ký Thêm Thành Viên Hợp Lệ</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input id="newMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
-                <input id="newMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
-            </div>
-            <button onclick="createNewMember()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-md shadow-md mt-4">Thêm Vào Danh Sách</button>
+    <input id="adminMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
+    <input id="adminMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
+</div>            <button onclick="createNewMember()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-md shadow-md mt-4">Thêm Vào Danh Sách</button>
             
             <h4 class="text-lg font-black mt-6 mb-3 text-gray-700">❌ Danh sách thành viên (Xóa ở đây sẽ gỡ tên khỏi mọi loại hoa triệt để):</h4>
             <div id="adminMemberList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
@@ -175,22 +184,45 @@
     }
 
     function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => {
-            s.classList.remove('active-section');
-            s.style.display = 'none';
-        }); 
-        const target = document.getElementById(id);
-        if(target) {
-            target.classList.add('active-section');
-            target.style.display = 'block';
-        }
-        if(id === 'tickSection') {
-            updateTickUserSelect();
-            document.getElementById('tickFlowersArea').classList.add('hidden');
-            document.getElementById('tickUserSelect').value = "";
-        }
+    document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('active-section');
+        s.style.display = 'none';
+    }); 
+    const target = document.getElementById(id);
+    if(target) {
+        target.classList.add('active-section');
+        target.style.display = 'block';
     }
     
+    // Đảm bảo mỗi khi vào tab tích hoa, danh sách lại được làm mới
+    if(id === 'tickSection') {
+        updateTickUserSelect();
+    }
+}
+    
+function showFlowersForNewMember() {
+    const name = document.getElementById('newMemberName').value.trim();
+    if(!name) return alert("Vui lòng nhập Tên Ingame!");
+    
+    // Hiện khu vực danh sách hoa
+    const area = document.getElementById('tickFlowersArea');
+    area.classList.remove('hidden');
+    
+    // Render danh sách hoa vào #tickFlowersGrid
+    const grid = document.getElementById('tickFlowersGrid');
+    const sortedFlowers = getMergedFlowers();
+    
+    grid.innerHTML = sortedFlowers.map(f => `
+        <div class="${rarityClass(f.rarity)} border-2 rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
+            <div class="absolute top-3 left-3">
+                <input type="checkbox" data-flower-name="${f.name}" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
+            </div>
+            <img src="${f.image}" class="w-24 h-24 object-contain mt-4"/>
+            <h3 class="text-center font-black text-sm text-[#5f412e] mt-3 leading-tight uppercase">${f.name}</h3>
+        </div>
+    `).join('');
+}
+
     function adminLogin(){ 
         const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
         if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
@@ -303,16 +335,24 @@
     const grid = document.getElementById('tickFlowersGrid');
     const area = document.getElementById('tickFlowersArea');
     
-    if(!selectedUser) { area.classList.add('hidden'); return; }
-    area.classList.remove('hidden');
+    // Kiểm tra nếu chưa chọn tên thì ẩn khu vực chọn hoa
+    if(!selectedUser) { 
+        if(area) area.classList.add('hidden'); 
+        return; 
+    }
+    if(area) area.classList.remove('hidden');
 
     const sortedFlowers = getMergedFlowers();
+    
     grid.innerHTML = sortedFlowers.map(f => {
-        // QUAN TRỌNG: Kiểm tra trong mảng owners của bông hoa xem có tên người dùng này chưa
-        const isOwned = f.owners && f.owners.some(o => o.ingame.toLowerCase().trim() === selectedUser.toLowerCase().trim());
+        // Kiểm tra an toàn: dùng || [] để tránh lỗi nếu f.owners là undefined
+        const ownersList = f.owners || [];
+        const isOwned = ownersList.some(o => 
+            o.ingame && o.ingame.toString().toLowerCase().trim() === selectedUser.toString().toLowerCase().trim()
+        );
         
         return `
-            <div class="${rarityClass(f.rarity)} border-2 ${isOwned ? 'border-pink-500 bg-pink-50/20':'border-transparent'} rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative">
+            <div class="${rarityClass(f.rarity)} border-2 ${isOwned ? 'border-pink-500 bg-pink-50/20' : 'border-transparent'} rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
                 <div class="absolute top-3 left-3">
                     <input type="checkbox" data-flower-name="${f.name}" ${isOwned ? 'checked' : ''} onchange="toggleCardBorder(this)" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
                 </div>
@@ -405,14 +445,14 @@
     
     if(!name) return alert("Vui lòng nhập Tên Ingame!");
 
-    // Lấy danh sách hoa đã tích từ grid mới
+    // Lấy danh sách hoa đã tích
     const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
     let tickedList = [];
     checkboxes.forEach(chk => {
         if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
     });
 
-    // Tạo yêu cầu mới chứa cả thông tin thành viên và danh sách hoa
+    // Đẩy yêu cầu vào hàng đợi
     updateRequests.push({ 
         id: Date.now().toString(), 
         type: 'NEW_REGISTRATION', 
@@ -425,7 +465,7 @@
     saveData();
     alert("Đã gửi yêu cầu! Admin sẽ duyệt cả thông tin thành viên và danh sách hoa của bạn.");
     
-    // Reset form và quay về trang chủ
+    // Reset form
     document.getElementById('newMemberName').value = '';
     document.getElementById('newMemberZalo').value = '';
     showSection('homeSection');
@@ -503,18 +543,25 @@ function approveRequest(reqId) {
     }
 
     function createNewMember() {
-        const name = document.getElementById('newMemberName').value.trim();
-        const zalo = document.getElementById('newMemberZalo').value.trim();
-        if(!name) return alert("Cần nhập tên Ingame!");
-        const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === name.toLowerCase().trim());
-        if(exist) return alert("Thành viên này đã được đăng ký từ trước!");
-        registeredMembers.push({ ingame: name, zalo: zalo });
-        saveData();
-        renderAdminMembers();
-        document.getElementById('newMemberName').value = '';
-        document.getElementById('newMemberZalo').value = '';
-        alert("Đã thêm thành viên hợp lệ mới thành công!");
-    }
+    // Sửa ID ở đây để khớp với HTML vừa đổi
+    const name = document.getElementById('adminMemberName').value.trim();
+    const zalo = document.getElementById('adminMemberZalo').value.trim();
+    
+    if(!name) return alert("Cần nhập tên Ingame!");
+    
+    const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === name.toLowerCase().trim());
+    if(exist) return alert("Thành viên này đã được đăng ký từ trước!");
+    
+    registeredMembers.push({ ingame: name, zalo: zalo });
+    saveData();
+    renderAdminMembers();
+    
+    // Reset lại ô input sau khi thêm
+    document.getElementById('adminMemberName').value = '';
+    document.getElementById('adminMemberZalo').value = '';
+    
+    alert("Đã thêm thành viên hợp lệ mới thành công!");
+}
 
     function createNewFlower() {
         const flowerName = document.getElementById('flowerName').value.trim();
