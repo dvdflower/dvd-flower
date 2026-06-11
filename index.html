@@ -31,6 +31,8 @@
         .modal-content{ background: linear-gradient( to bottom, white, #fff8fb ); box-shadow: 0 25px 50px rgba(0,0,0,.2); }
         .owner-box{ background: linear-gradient( to right, white, #fff7fb ); border: 1px solid #ffd9eb; }
         h1, h2, h3, .font-black { font-weight: 800 !important; }
+.section { display: none; }
+    .active-section { display: block !important; }
     </style>
 </head>
 <body>
@@ -123,9 +125,8 @@
                 </button>
             </div>
         </div>
-    </div>
-
-    <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
+    </div> <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
+</div>
         <h2 class="text-4xl font-black text-red-700 mb-6">🌷 Hệ Thống Quản Trị Admin Panel</h2>
 
         <div class="bg-yellow-50/50 border-2 border-yellow-200 p-6 rounded-3xl mb-8">
@@ -192,19 +193,21 @@
         if(window.saveCloudData) await window.saveCloudData(); 
     }
 
-  function showSection(id){ 
-    // 1. Ẩn tất cả các section bằng cách xóa class active-section
+  function showSection(id) {
+    // 1. Ẩn tất cả các section bằng cách lặp qua class .section
     document.querySelectorAll('.section').forEach(s => {
         s.classList.remove('active-section');
+        s.style.display = 'none'; // Ép ẩn bằng style
     }); 
     
     // 2. Hiện section được chọn
     const target = document.getElementById(id);
     if(target) {
         target.classList.add('active-section');
+        target.style.display = 'block'; // Ép hiện bằng style
     }
     
-    // 3. Nếu là tab gửi yêu cầu, cập nhật danh sách thành viên
+    // 3. Xử lý riêng cho tab Gửi Yêu Cầu
     if(id === 'tickSection') {
         updateTickUserSelect();
         document.getElementById('tickFlowersArea').classList.add('hidden');
