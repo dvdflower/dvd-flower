@@ -14,11 +14,7 @@
         @keyframes sakuraMove{ 0%{ transform:translateX(0); } 100%{ transform:translateX(130vw); } }
         @keyframes sakuraMove2{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-130vw); } }
         .section{ display:none; } .active-section{ display:block; }
-        ..header-box { 
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6); 
-    position: relative; 
-    overflow: hidden; 
-}
+        .header-box{ background: linear-gradient( 135deg, #0c4c3d, #196953 ); position:relative; overflow:hidden; }
         .header-box::after{ content:'🌸'; position:absolute; right:20px; top:10px; font-size:130px; opacity:.08; }
         .menu-btn{ transition:.25s; position:relative; overflow:hidden; }
         .menu-btn:hover{ transform: translateY(-4px) scale(1.02); }
@@ -72,7 +68,7 @@
     </div>
 
     <div id="memberSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
-        <h2 class="text-4xl font-black mb-6">👥 Danh sách thành viên</h2>
+        <h2 class="text-4xl font-black mb-6">👥 Danh sách thành viên (<span id="totalMembers">0</span>)</h2>
         <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
     </div>
 
@@ -80,16 +76,33 @@
         <h2 class="text-4xl font-black mb-6">🌸 Danh sách hoa</h2>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <button onclick="showRarity('HOA ĐỎ')" class="bg-red-100 text-red-700 rounded-2xl p-5 font-black text-xl">🌹 HOA ĐỎ</button>
-            <button onclick="showRarity('HOA CAM')" class="bg-orange-100 text-orange-700 rounded-2xl p-5 font-black text-xl">🧡 HOA CAM</button>
-            <button onclick="showRarity('HOA TÍM')" class="bg-purple-100 text-purple-700 rounded-2xl p-5 font-black text-xl">💜 HOA TÍM</button>
-            <button onclick="showRarity('HOA LAM')" class="bg-blue-100 text-blue-700 rounded-2xl p-5 font-black text-xl">💎 HOA LAM</button>
+            <button onclick="showRarity('HOA CAM')" class="bg-orange-100 text-orange-700 rounded-2xl p-5 font-black text-xl">🏵️ HOA CAM</button>
+            <button onclick="showRarity('HOA TÍM')" class="bg-purple-100 text-purple-700 rounded-2xl p-5 font-black text-xl">💮 HOA TÍM</button>
+            <button onclick="showRarity('HOA LAM')" class="bg-blue-100 text-blue-700 rounded-2xl p-5 font-black text-xl">🌻 HOA LAM</button>
             <button onclick="showRarity('HOA LỤC')" class="bg-green-100 text-green-700 rounded-2xl p-5 font-black text-xl">🍀 HOA LỤC</button>
         </div>
         <div id="rarityGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 mt-6"></div>
     </div>
 
     <div id="tickSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
-        <h2 class="text-4xl font-black text-pink-600 mb-2">📌 Gửi Yêu Cầu Cập Nhật Hoa</h2>
+    <h2 class="text-4xl font-black text-pink-600 mb-2">📌 Gửi Yêu Cầu Cập Nhật Hoa</h2>
+    
+    <div class="bg-blue-50 p-6 rounded-3xl mb-8 border border-blue-200">
+        <h3 class="text-2xl font-black text-blue-800 mb-4">🆕 Đăng ký thành viên mới</h3>
+        <p class="text-gray-600 mb-4">Nếu chưa có tên trong danh sách, hãy điền thông tin để Admin duyệt nhé!</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input id="reqNewMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
+            <input id="reqNewMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
+        </div>
+        <button onclick="submitNewMemberRequest()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black mt-4 hover:bg-blue-700 transition">Gửi yêu cầu đăng ký</button>
+    </div>
+    <p class="text-gray-500 text-lg mb-6">Chọn chính xác tên của bạn, tích chọn danh sách hoa bạn đang sở hữu thực tế hiện tại, sau đó gửi yêu cầu để Admin phê duyệt.</p>
+    
+    <div class="max-w-xl mb-6">
+        ...
+    </div>
+</div>
+
         <p class="text-gray-500 text-lg mb-6">Chọn chính xác tên của bạn, tích chọn danh sách hoa bạn đang sở hữu thực tế hiện tại, sau đó gửi yêu cầu để Admin phê duyệt.</p>
         
         <div class="max-w-xl mb-6">
@@ -169,7 +182,7 @@
     let flowers = []; 
     let registeredMembers = []; 
     let updateRequests = []; // Danh sách lưu hàng đợi yêu cầu sửa đổi chờ duyệt
-    const adminPass = "NN789"; 
+    const adminPass = "DVD123"; 
     const rarityOrder = { 'HOA ĐỎ': 1, 'HOA CAM': 2, 'HOA TÍM': 3, 'HOA LAM': 4, 'HOA LỤC': 5 };
 
     async function saveData(){ 
@@ -189,33 +202,10 @@
         document.getElementById('tickUserSelect').value = "";
     }
 }
-  
-
-function adminLogin(){ 
-    const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
-    if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
-}
-
-// === THÊM ĐOẠN NÀY VÀO ĐÂY ===
-function editFlower(fIdx) {
-    const f = flowers[fIdx];
-    const newName = prompt("Nhập tên hoa mới:", f.name);
-    const newImage = prompt("Nhập link ảnh hoa mới:", f.image);
-    
-    if (newName !== null && newImage !== null) {
-        flowers[fIdx].name = newName.trim();
-        flowers[fIdx].image = newImage.trim();
-        saveData();
-        renderAdminFlowers();
-        renderSearch();
-        alert("Đã cập nhật thông tin hoa thành công!");
+    function adminLogin(){ 
+        const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
+        if(pass === adminPass){ showSection('adminSection'); } else { alert("Sai mật khẩu truy cập!"); } 
     }
-}
-// =============================
-
-function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'?'orange':r==='HOA TÍM'?'purple':r==='HOA LAM'?'blue':'green'); }
-
-// ... (các hàm khác)
 
     function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'?'orange':r==='HOA TÍM'?'purple':r==='HOA LAM'?'blue':'green'); }
 
@@ -306,10 +296,13 @@ function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'
     }
     function closeFlowerOwnersModal(){ document.getElementById('flowerOwnersModal').style.display = 'none'; }
 
-    function renderMembers(){
-        document.getElementById('memberList').innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m=>`
-            <button onclick="showMemberFlowers('${m.ingame.replace(/'/g, "\\'")}')" class="owner-box rounded-3xl p-5 text-left shadow"><div class="text-2xl font-black text-[#1c5d4d]">🎮 ${m.ingame}</div><div class="text-gray-600">💬 ${m.zalo||'Không có zalo'}</div></button>`).join('');
-    }
+   function renderMembers(){
+    // Dòng này sẽ lấy độ dài của mảng thành viên và hiển thị vào thẻ <span> vừa tạo ở Bước 1
+    document.getElementById('totalMembers').innerText = registeredMembers.length;
+    
+    document.getElementById('memberList').innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m=>`
+        <button onclick="showMemberFlowers('${m.ingame.replace(/'/g, "\\'")}')" class="owner-box rounded-3xl p-5 text-left shadow"><div class="text-2xl font-black text-[#1c5d4d]">🎮 ${m.ingame}</div><div class="text-gray-600">💬 ${m.zalo||'Không có zalo'}</div></button>`).join('');
+}
 
     // --- TÍNH NĂNG THÀNH VIÊN TỰ TÍCH HOA & GỬI YÊU CẦU ---
     function updateTickUserSelect() {
@@ -375,33 +368,70 @@ function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'
 
     // --- TÍNH NĂNG ADMIN PHÊ DUYỆT & ĐIỀU CHỈNH TOÀN DIỆN ---
     function renderAdminRequests() {
-        const listDiv = document.getElementById('adminRequestList');
-        document.getElementById('reqCount').innerText = updateRequests.length;
-        if(updateRequests.length === 0) {
-            listDiv.innerHTML = `<p class="text-gray-400 italic">Hiện tại không có yêu cầu sửa đổi nào cần duyệt.</p>`;
-            return;
-        }
-
-        listDiv.innerHTML = updateRequests.map(r => `
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-yellow-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <div class="text-xl font-black text-amber-800">🎮 Thành viên: ${r.ingame}</div>
-                    <div class="text-xs text-gray-400 font-bold mb-2">Thời gian gửi: ${r.time}</div>
-                    <div class="text-sm font-bold text-gray-700">
-                        Danh sách đăng ký sở hữu mới (${r.tickedFlowers.length}): 
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            ${r.tickedFlowers.map(f => `<span class="bg-pink-50 border border-pink-200 text-pink-700 text-xs px-2 py-0.5 rounded-md uppercase">${f}</span>`).join('') || '<span class="text-gray-400 italic font-normal text-xs">Không tích chọn bông nào (Xóa hết hoa)</span>'}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-2 shrink-0">
-                    <button onclick="approveRequest('${r.id}')" class="bg-green-600 hover:bg-green-700 text-white font-black px-5 py-2.5 rounded-xl text-sm shadow">✔️ Duyệt cấp nhật</button>
-                    <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-black px-4 py-2.5 rounded-xl text-sm">Từ chối</button>
-                </div>
-            </div>
-        `).join('');
+    const listDiv = document.getElementById('adminRequestList');
+    document.getElementById('reqCount').innerText = updateRequests.length;
+    
+    if(updateRequests.length === 0) {
+        listDiv.innerHTML = `<p class="text-gray-400 italic">Hiện tại không có yêu cầu nào.</p>`;
+        return;
     }
 
+    listDiv.innerHTML = updateRequests.map(r => `
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-yellow-200 flex flex-col gap-4">
+            ${r.type === 'NEW_MEMBER' ? `
+                <div>
+                    <div class="text-blue-700 font-black mb-1">🆕 Đăng ký thành viên mới</div>
+                    <div class="font-bold text-lg">🎮 ${r.ingame} - 💬 ${r.zalo}</div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="approveNewMember('${r.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm">Duyệt thành viên</button>
+                    <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm">Từ chối</button>
+                </div>
+            ` : `
+                <div>
+                    <div class="text-xl font-black text-amber-800">🎮 Thành viên: ${r.ingame}</div>
+                    <div class="text-sm font-bold">Cập nhật hoa: ${r.tickedFlowers?.length || 0} bông</div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="approveRequest('${r.id}')" class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm">Duyệt cập nhật</button>
+                    <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm">Từ chối</button>
+                </div>
+            `}
+        </div>
+    `).join('');
+}
+
+// Hàm mới để xử lý duyệt thành viên
+function approveNewMember(reqId) {
+    const req = updateRequests.find(r => r.id === reqId);
+    if (!req) return;
+    registeredMembers.push({ ingame: req.ingame, zalo: req.zalo });
+    updateRequests = updateRequests.filter(r => r.id !== reqId);
+    saveData();
+    renderAdminMembers();
+    renderAdminRequests();
+    renderMembers();
+    updateTickUserSelect();
+    alert("Đã thêm thành viên mới!");
+}
+
+// Cập nhật hàm này để hiện số lượng thành viên
+function renderMembers(){
+    document.getElementById('totalMembers').innerText = registeredMembers.length;
+    document.getElementById('memberList').innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m=>`
+        <button onclick="showMemberFlowers('${m.ingame.replace(/'/g, "\\'")}')" class="owner-box rounded-3xl p-5 text-left shadow"><div class="text-2xl font-black text-[#1c5d4d]">🎮 ${m.ingame}</div><div class="text-gray-600">💬 ${m.zalo||'Không có zalo'}</div></button>`).join('');
+}
+
+function submitNewMemberRequest() {
+    const name = document.getElementById('reqNewMemberName').value.trim();
+    const zalo = document.getElementById('reqNewMemberZalo').value.trim();
+    if(!name) return alert("Vui lòng nhập tên Ingame!");
+    updateRequests.push({ id: Date.now().toString(), type: 'NEW_MEMBER', ingame: name, zalo: zalo, time: new Date().toLocaleString() });
+    saveData();
+    alert("Đã gửi yêu cầu đăng ký!");
+    document.getElementById('reqNewMemberName').value = '';
+    document.getElementById('reqNewMemberZalo').value = '';
+}
     function approveRequest(reqId) {
         const req = updateRequests.find(r => r.id === reqId);
         if(!req) return;
@@ -543,22 +573,16 @@ function renderAdminFlowers() {
          </div>
       </div>
       
-      <div class="grid grid-cols-1 gap-2 mt-4">
-         <button onclick="editFlower(${fIdx})" class="bg-blue-500 text-white py-2 rounded-xl text-sm font-black hover:bg-blue-600 transition">
-            ✏️ Sửa tên & ảnh hoa
+      <div class="grid grid-cols-2 gap-3 mt-4">
+         <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition flex items-center justify-center gap-1">
+            🧹 Xóa sạch người sở hữu
          </button>
-         <div class="grid grid-cols-2 gap-2">
-             <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition">
-                🧹 Xóa sạch sở hữu
-             </button>
-             <button onclick="delFlow(${fIdx})" class="bg-red-600 text-white py-2 rounded-xl text-sm font-black hover:bg-red-700 transition">
-                🗑️ Xóa mẫu hoa
-             </button>
-         </div>
+         <button onclick="delFlow(${fIdx})" class="bg-red-600 text-white py-2 rounded-xl text-sm font-black hover:bg-red-700 transition flex items-center justify-center gap-1">
+            🗑️ Xóa mẫu hoa hệ thống
+         </button>
       </div>
     </div>`).join('');
 }
-
 
 // HÀM XỬ LÝ XÓA SẠCH TOÀN BỘ THÀNH VIÊN CỦA MỘT BÔNG HOA CỤ THỂ
 function clearAllOwnersFromFlower(flowerIdx, flowerName) {
@@ -579,7 +603,33 @@ function clearAllOwnersFromFlower(flowerIdx, flowerName) {
     function delFlow(i) { if(confirm("Xóa hẳn loại hoa này?")) { flowers.splice(i, 1); saveData(); renderAdminFlowers(); } }
     function clearAllFlowers(){ if(confirm('Xóa hết tất cả hoa?')){ flowers=[]; saveData(); renderAdminFlowers(); } }
 
-    window.addEventListener('load', () => {
+// Hiển thị tổng thành viên
+function renderMembers(){
+    document.getElementById('totalMembers').innerText = registeredMembers.length;
+    document.getElementById('memberList').innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m=>`
+        <button onclick="showMemberFlowers('${m.ingame.replace(/'/g, "\\'")}')" class="owner-box rounded-3xl p-5 text-left shadow"><div class="text-2xl font-black text-[#1c5d4d]">🎮 ${m.ingame}</div><div class="text-gray-600">💬 ${m.zalo||'Không có zalo'}</div></button>`).join('');
+}
+
+// Xử lý gửi yêu cầu đăng ký thành viên mới
+function submitNewMemberRequest() {
+    const name = document.getElementById('reqNewMemberName').value.trim();
+    const zalo = document.getElementById('reqNewMemberZalo').value.trim();
+    if(!name) return alert("Vui lòng nhập tên Ingame!");
+
+    updateRequests.push({
+        id: Date.now().toString(),
+        type: 'NEW_MEMBER',
+        ingame: name,
+        zalo: zalo,
+        time: new Date().toLocaleString('vi-VN')
+    });
+    saveData();
+    alert("Đã gửi yêu cầu đăng ký thành viên! Admin sẽ duyệt sớm.");
+    document.getElementById('reqNewMemberName').value = '';
+    document.getElementById('reqNewMemberZalo').value = '';
+}
+
+   window.addEventListener('load', () => {
         const localFl = localStorage.getItem('dvdFlowers');
         const localMem = localStorage.getItem('dvdMembers');
         const localReq = localStorage.getItem('dvdRequests');
@@ -588,6 +638,7 @@ function clearAllOwnersFromFlower(flowerIdx, flowerName) {
         if(localReq) updateRequests = JSON.parse(localReq);
         
         renderSearch(); renderMembers(); renderAdminFlowers(); renderAdminMembers(); renderAdminRequests();
+        updateTickUserSelect(); // THÊM DÒNG NÀY ĐỂ ĐẢM BẢO DROPDOWN LOAD NGAY KHI VÀO TRANG
     });
 // HÀM XỬ LÝ XOÁ TOÀN BỘ THÀNH VIÊN CỦA TẤT CẢ CÁC LOÀI HOA CÙNG LÚC
 function clearAllOwnersFromAllFlowers() {
