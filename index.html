@@ -193,9 +193,18 @@
     }
 
   function showSection(id){ 
-    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active-section')); 
-    document.getElementById(id).classList.add('active-section'); 
-    // Luôn luôn cập nhật lại danh sách tên thành viên mỗi khi bấm vào tab gửi yêu cầu
+    // 1. Ẩn tất cả các section bằng cách xóa class active-section
+    document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('active-section');
+    }); 
+    
+    // 2. Hiện section được chọn
+    const target = document.getElementById(id);
+    if(target) {
+        target.classList.add('active-section');
+    }
+    
+    // 3. Nếu là tab gửi yêu cầu, cập nhật danh sách thành viên
     if(id === 'tickSection') {
         updateTickUserSelect();
         document.getElementById('tickFlowersArea').classList.add('hidden');
