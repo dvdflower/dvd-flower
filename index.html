@@ -462,19 +462,25 @@ function showFlowersForNewMember() {
         `).join('');
     }
 
-    function approveNewMember(reqId) {
-        const req = updateRequests.find(r => r.id === reqId);
-        if (!req) return;
-        registeredMembers.push({ ingame: req.ingame, zalo: req.zalo });
-        updateRequests = updateRequests.filter(r => r.id !== reqId);
-        saveData();
-        renderAdminMembers();
-        renderAdminRequests();
-        renderMembers();
-        updateTickUserSelect();
-        alert("Đã thêm thành viên mới!");
-    }
-
+    async function approveNewMember(reqId) {
+    const req = updateRequests.find(r => r.id === reqId);
+    if (!req) return;
+    
+    // Thêm vào danh sách chính thức
+    registeredMembers.push({ ingame: req.ingame, zalo: req.zalo });
+    
+    // Xóa khỏi hàng đợi yêu cầu
+    updateRequests = updateRequests.filter(r => r.id !== reqId);
+    
+    // Ép buộc đợi lưu dữ liệu trực tiếp lên mạng
+    await saveData();
+    
+    renderAdminMembers();
+    renderAdminRequests();
+    renderMembers();
+    updateTickUserSelect();
+    alert("Đã duyệt và thêm thành viên mới lên hệ thống thành công!");
+}
     function submitUnifiedRequest() {
     const name = document.getElementById('newMemberName').value.trim();
     const zalo = document.getElementById('newMemberZalo').value.trim();
@@ -507,9 +513,15 @@ function showFlowersForNewMember() {
     showSection('homeSection');
 }
     
-function approveRequest(reqId) {
+async function approveRequest(reqId) {
     const req = updateRequests.find(r => r.id === reqId);
     if(!req) return;
+
+    // Tự động kiểm tra và thêm người này vào danh sách thành viên nếu họ chưa tồn tại
+    const checkExist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === req.ingame.toLowerCase().trim());
+    if(!checkExist) {
+        registeredMembers.push({ ingame: req.ingame, zalo: req.zalo || '' });
+    }
 
     // Gán hoa cho thành viên
     flowers.forEach(f => {
@@ -521,27 +533,30 @@ function approveRequest(reqId) {
         // Thêm tên vào hoa nếu hoa đó có trong danh sách được tích
         const isTargeted = req.tickedFlowers.some(name => name.trim().toUpperCase() === f.name.trim().toUpperCase());
         if(isTargeted) {
-            // Tìm thông tin Zalo cũ nếu có
-            const memberInfo = registeredMembers.find(m => m.ingame.toLowerCase() === req.ingame.toLowerCase());
-            f.owners.push({ ingame: req.ingame, zalo: memberInfo ? memberInfo.zalo : '' });
+            f.owners.push({ ingame: req.ingame, zalo: req.zalo || '' });
         }
     });
 
     updateRequests = updateRequests.filter(r => r.id !== reqId);
-    saveData();
-    // ... gọi lại các hàm render...
+    
+    // Ép buộc đợi lưu lên Cloud
+    await saveData();
+    
     renderAdminRequests();
     renderAdminFlowers();
+    renderAdminMembers();
     renderMembers();
+    updateTickUserSelect();
     alert(`Đã duyệt thành công cho: ${req.ingame}`);
 }
-    function rejectRequest(reqId) {
-        if(confirm("Bạn có chắc muốn từ chối yêu cầu cập nhật này không?")) {
-            updateRequests = updateRequests.filter(r => r.id !== reqId);
-            saveData();
-            renderAdminRequests();
-        }
+
+    async function rejectRequest(reqId) {
+    if(confirm("Bạn có chắc muốn từ chối yêu cầu cập nhật này không?")) {
+        updateRequests = updateRequests.filter(r => r.id !== reqId);
+        await saveData();
+        renderAdminRequests();
     }
+}
 
     function renderAdminMembers() {
     const div = document.getElementById('adminMemberList');
@@ -574,21 +589,21 @@ function approveRequest(reqId) {
         `;
     }).join('');
 }
-    function deleteMemberTrietDe(memberName) {
-        if(confirm(`XÓA TRIỆT ĐỂ thành viên [${memberName}]?`)) {
-            registeredMembers = registeredMembers.filter(m => m.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
-            flowers.forEach(f => { if(f.owners) f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim()); });
-            updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
-            saveData();
-            renderAdminMembers();
-            renderAdminFlowers();
-            renderAdminRequests();
-            alert(`Đã hoàn tất xóa bỏ triệt để thành viên: ${memberName}`);
-        }
+    async function deleteMemberTrietDe(memberName) {
+    if(confirm(`XÓA TRIỆT ĐỂ thành viên [${memberName}]?`)) {
+        registeredMembers = registeredMembers.filter(m => m.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
+        flowers.forEach(f => { if(f.owners) f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim()); });
+        updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
+        await saveData();
+        renderAdminMembers();
+        renderAdminFlowers();
+        renderAdminRequests();
+        renderMembers();
+        updateTickUserSelect();
+        alert(`Đã hoàn tất xóa bỏ triệt để thành viên: ${memberName}`);
     }
-
-    function createNewMember() {
-    // Sửa ID ở đây để khớp với HTML vừa đổi
+}
+   async function createNewMember() {
     const name = document.getElementById('adminMemberName').value.trim();
     const zalo = document.getElementById('adminMemberZalo').value.trim();
     
@@ -597,9 +612,15 @@ function approveRequest(reqId) {
     const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === name.toLowerCase().trim());
     if(exist) return alert("Thành viên này đã được đăng ký từ trước!");
     
+    // Thêm vào mảng tạm
     registeredMembers.push({ ingame: name, zalo: zalo });
-    saveData();
+    
+    // Ép buộc đợi lưu dữ liệu lên Cloud thành công xong mới chạy tiếp
+    await saveData();
+    
     renderAdminMembers();
+    renderMembers();
+    updateTickUserSelect();
     
     // Reset lại ô input sau khi thêm
     document.getElementById('adminMemberName').value = '';
