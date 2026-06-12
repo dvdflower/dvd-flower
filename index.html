@@ -335,6 +335,12 @@ function showFlowersForNewMember() {
     const grid = document.getElementById('tickFlowersGrid');
     const area = document.getElementById('tickFlowersArea');
     
+    // --- BẮT ĐẦU ĐOẠN MỚI THÊM VÀO ---
+    // Làm sạch ô nhập của thành viên mới để tránh nhầm lẫn
+    document.getElementById('newMemberName').value = '';
+    document.getElementById('newMemberZalo').value = '';
+    // --- KẾT THÚC ĐOẠN MỚI ---
+    
     // Kiểm tra nếu chưa chọn tên thì ẩn khu vực chọn hoa
     if(!selectedUser) { 
         if(area) area.classList.add('hidden'); 
@@ -362,7 +368,6 @@ function showFlowersForNewMember() {
         `;
     }).join('');
 }
-
     function toggleCardBorder(chk) {
         const card = chk.closest('.rounded-\[25\px\]');
         if(chk.checked) { card.classList.add('border-pink-500', 'bg-pink-50/20'); } 
@@ -370,27 +375,31 @@ function showFlowersForNewMember() {
     }
 
     function submitUserRequest() {
-        const selectedUser = document.getElementById('tickUserSelect').value;
-        if(!selectedUser) return alert("Vui lòng chọn tên!");
+    const selectedUser = document.getElementById('tickUserSelect').value;
+    if(!selectedUser) return alert("Vui lòng chọn tên!");
 
-        const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
-        let tickedList = [];
-        checkboxes.forEach(chk => {
-            if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
-        });
+    // SỬA: Lấy đúng danh sách hoa đã tích từ khu vực tickFlowersGrid
+    const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
+    let tickedList = [];
+    checkboxes.forEach(chk => {
+        if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
+    });
 
-        updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== selectedUser.toLowerCase().trim());
-        updateRequests.push({
-            id: Date.now().toString(),
-            ingame: selectedUser,
-            tickedFlowers: tickedList,
-            time: new Date().toLocaleString('vi-VN')
-        });
+    // Cập nhật yêu cầu mới
+    updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== selectedUser.toLowerCase().trim());
+    updateRequests.push({
+        id: Date.now().toString(),
+        type: 'UPDATE_EXISTING', // Thêm type để phân biệt
+        ingame: selectedUser,
+        tickedFlowers: tickedList,
+        time: new Date().toLocaleString('vi-VN')
+    });
 
-        saveData();
-        alert(`🚀 Gửi yêu cầu thành công! Vui lòng đợi Admin kiểm tra và duyệt.`);
-        showSection('homeSection');
-    }
+    saveData();
+    renderAdminRequests(); // Cập nhật lại giao diện Admin ngay lập tức
+    alert(`🚀 Gửi yêu cầu thành công! Vui lòng đợi Admin kiểm tra và duyệt.`);
+    showSection('homeSection');
+}
 
     function renderAdminRequests() {
         const listDiv = document.getElementById('adminRequestList');
@@ -475,35 +484,30 @@ function approveRequest(reqId) {
     const req = updateRequests.find(r => r.id === reqId);
     if(!req) return;
 
-    // Nếu là đăng ký mới hoàn toàn
-    if (req.type === 'NEW_REGISTRATION') {
-        // Thêm vào danh sách thành viên nếu chưa có
-        if(!registeredMembers.some(m => m.ingame.toLowerCase() === req.ingame.toLowerCase())) {
-            registeredMembers.push({ ingame: req.ingame, zalo: req.zalo });
-        }
-    }
-
     // Gán hoa cho thành viên
     flowers.forEach(f => {
         if(!f.owners) f.owners = [];
-        // Gỡ tên cũ (nếu đã có trước đó)
+        
+        // Gỡ tên cũ (để tránh trùng lặp khi cập nhật)
         f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== req.ingame.toLowerCase().trim());
         
-        // Thêm tên mới nếu hoa đó được tích
+        // Thêm tên vào hoa nếu hoa đó có trong danh sách được tích
         const isTargeted = req.tickedFlowers.some(name => name.trim().toUpperCase() === f.name.trim().toUpperCase());
         if(isTargeted) {
-            f.owners.push({ ingame: req.ingame, zalo: req.zalo });
+            // Tìm thông tin Zalo cũ nếu có
+            const memberInfo = registeredMembers.find(m => m.ingame.toLowerCase() === req.ingame.toLowerCase());
+            f.owners.push({ ingame: req.ingame, zalo: memberInfo ? memberInfo.zalo : '' });
         }
     });
 
     updateRequests = updateRequests.filter(r => r.id !== reqId);
     saveData();
+    // ... gọi lại các hàm render...
     renderAdminRequests();
     renderAdminFlowers();
     renderMembers();
     alert(`Đã duyệt thành công cho: ${req.ingame}`);
 }
-
     function rejectRequest(reqId) {
         if(confirm("Bạn có chắc muốn từ chối yêu cầu cập nhật này không?")) {
             updateRequests = updateRequests.filter(r => r.id !== reqId);
