@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -72,7 +71,7 @@
 
     <div id="memberSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
         <h2 class="text-4xl font-black mb-6">👥 Danh sách thành viên (<span id="totalMembers">0</span>)</h2>
-       <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+       <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full block mt-4" style="height:auto; overflow:visible;"></div>
     </div>
 
     <div id="flowerSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
@@ -88,36 +87,36 @@
     </div>
 
     <div id="tickSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
-    <h2 class="text-4xl font-black text-pink-600 mb-6">📌 Đăng ký & Tích chọn hoa</h2>
-    
-    <div class="bg-green-50 p-6 rounded-3xl mb-6 border border-green-200">
-        <h3 class="text-xl font-black text-green-800 mb-3">👤 Bạn là thành viên cũ? (Chọn tên để hiện hoa)</h3>
-        <select id="tickUserSelect" onchange="loadUserCurrentStatus()" class="w-full border-2 border-green-300 rounded-2xl p-4 font-bold text-lg">
-            <option value="">-- Bấm chọn tên của bạn --</option>
-        </select>
+        <h2 class="text-4xl font-black text-pink-600 mb-6">📌 Đăng ký & Tích chọn hoa</h2>
+        
+        <div class="bg-green-50 p-6 rounded-3xl mb-6 border border-green-200">
+            <h3 class="text-xl font-black text-green-800 mb-3">👤 Bạn là thành viên cũ? (Chọn tên để hiện hoa)</h3>
+            <select id="tickUserSelect" onchange="loadUserCurrentStatus()" class="w-full border-2 border-green-300 rounded-2xl p-4 font-bold text-lg">
+                <option value="">-- Bấm chọn tên của bạn --</option>
+            </select>
+        </div>
+
+        <div class="bg-blue-50 p-6 rounded-3xl mb-8 border border-blue-200">
+            <h3 class="text-xl font-black text-blue-800 mb-3">🆕 Bạn là thành viên mới? (Nhập thông tin)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input id="newMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
+                <input id="newMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
+            </div>
+            <button onclick="showFlowersForNewMember()" class="mt-4 w-full bg-blue-600 text-white p-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition">
+                ✅ Nhập xong: Mở danh sách hoa để chọn
+            </button>
+        </div>
+
+        <div id="tickFlowersArea" class="hidden">
+            <h3 class="text-2xl font-black text-gray-700 mb-4">🌸 Chọn hoa bạn đang sở hữu:</h3>
+            <div id="tickFlowersGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"></div>
+            <button onclick="submitUnifiedRequest()" class="mt-8 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-2xl px-12 py-5 rounded-3xl shadow-xl">
+                🚀 Gửi yêu cầu
+            </button>
+        </div>
     </div>
 
-    <div class="bg-blue-50 p-6 rounded-3xl mb-8 border border-blue-200">
-    <h3 class="text-xl font-black text-blue-800 mb-3">🆕 Bạn là thành viên mới? (Nhập thông tin)</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input id="newMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
-        <input id="newMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
-    </div>
-    <button onclick="showFlowersForNewMember()" class="mt-4 w-full bg-blue-600 text-white p-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition">
-        ✅ Nhập xong: Mở danh sách hoa để chọn
-    </button>
-</div>
-
-    <div id="tickFlowersArea" class="hidden">
-        <h3 class="text-2xl font-black text-gray-700 mb-4">🌸 Chọn hoa bạn đang sở hữu:</h3>
-        <div id="tickFlowersGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"></div>
-        <button onclick="submitUnifiedRequest()" class="mt-8 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-2xl px-12 py-5 rounded-3xl shadow-xl">
-            🚀 Gửi yêu cầu
-        </button>
-    </div>
-</div>
-
-   <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
+    <div id="adminSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
         <h2 class="text-4xl font-black text-red-700 mb-6">🌷 Hệ Thống Quản Trị Admin Panel</h2>
 
         <div class="bg-yellow-50/50 border-2 border-yellow-200 p-6 rounded-3xl mb-8">
@@ -130,12 +129,13 @@
         <div class="bg-white/50 border border-gray-200 p-6 rounded-3xl mb-8">
             <h3 class="text-2xl font-black mb-4 text-blue-800">👤 Đăng Ký Thêm Thành Viên Hợp Lệ</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input id="adminMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
-    <input id="adminMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
-</div>            <button onclick="createNewMember()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-md shadow-md mt-4">Thêm Vào Danh Sách</button>
+                <input id="adminMemberName" placeholder="🎮 Tên Ingame" class="border rounded-2xl p-4 font-bold"/>
+                <input id="adminMemberZalo" placeholder="💬 Tên Zalo" class="border rounded-2xl p-4 font-bold"/>
+            </div>
+            <button onclick="createNewMember()" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-md shadow-md mt-4">Thêm Vào Danh Sách</button>
             
             <h4 class="text-lg font-black mt-6 mb-3 text-gray-700">❌ Danh sách thành viên (Xóa ở đây sẽ gỡ tên khỏi mọi loại hoa triệt để):</h4>
-            <div id="adminMemberList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            <div id="adminMemberList" class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full block clear-both mt-3" style="height:auto; overflow:visible;"></div>
         </div>
 
         <div class="bg-white/50 border border-gray-200 p-6 rounded-3xl mb-8">
@@ -163,7 +163,7 @@
             </div>
             <div id="adminFlowerList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
-    </div> <!-- Đóng thẻ #adminSection đúng chỗ -->
+    </div>
 
     <div id="memberFlowerModal" class="modal"><div class="modal-content rounded-[35px] p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center mb-5"><h2 class="text-3xl font-black">🌸 Hoa thành viên</h2><button onclick="closeMemberModal()" class="bg-red-500 text-white px-4 py-2 rounded-xl">Đóng</button></div><div id="memberFlowerContent" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div></div></div>
     <div id="flowerOwnersModal" class="modal"><div class="modal-content rounded-[35px] p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"><div class="flex justify-between items-center mb-5"><div><h2 class="text-3xl font-black">👥 Thành viên sở hữu</h2><p class="text-gray-500 text-lg mt-1" id="flowerOwnersSubTitle"></p></div><button onclick="closeFlowerOwnersModal()" class="bg-red-500 text-white px-4 py-2 rounded-xl">Đóng</button></div><div id="flowerOwnersContent" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></div></div>
@@ -176,52 +176,41 @@
     const adminPass = "DVD123"; 
     const rarityOrder = { 'HOA ĐỎ': 1, 'HOA CAM': 2, 'HOA TÍM': 3, 'HOA LAM': 4, 'HOA LỤC': 5 };
 
-    async function saveData(){ 
-        localStorage.setItem('dvdFlowers', JSON.stringify(flowers)); 
-        localStorage.setItem('dvdMembers', JSON.stringify(registeredMembers)); 
-        localStorage.setItem('dvdRequests', JSON.stringify(updateRequests)); 
-        if(window.saveCloudData) await window.saveCloudData(); 
-    }
-
     function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => {
-        s.classList.remove('active-section');
-        s.style.display = 'none';
-    }); 
-    const target = document.getElementById(id);
-    if(target) {
-        target.classList.add('active-section');
-        target.style.display = 'block';
+        document.querySelectorAll('.section').forEach(s => {
+            s.classList.remove('active-section');
+            s.style.display = 'none';
+        }); 
+        const target = document.getElementById(id);
+        if(target) {
+            target.classList.add('active-section');
+            target.style.display = 'block';
+        }
+        if(id === 'tickSection') {
+            updateTickUserSelect();
+        }
     }
     
-    // Đảm bảo mỗi khi vào tab tích hoa, danh sách lại được làm mới
-    if(id === 'tickSection') {
-        updateTickUserSelect();
-    }
-}
-    
-function showFlowersForNewMember() {
-    const name = document.getElementById('newMemberName').value.trim();
-    if(!name) return alert("Vui lòng nhập Tên Ingame!");
-    
-    // Hiện khu vực danh sách hoa
-    const area = document.getElementById('tickFlowersArea');
-    area.classList.remove('hidden');
-    
-    // Render danh sách hoa vào #tickFlowersGrid
-    const grid = document.getElementById('tickFlowersGrid');
-    const sortedFlowers = getMergedFlowers();
-    
-    grid.innerHTML = sortedFlowers.map(f => `
-        <div class="${rarityClass(f.rarity)} border-2 rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
-            <div class="absolute top-3 left-3">
-                <input type="checkbox" data-flower-name="${f.name}" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
+    function showFlowersForNewMember() {
+        const name = document.getElementById('newMemberName').value.trim();
+        if(!name) return alert("Vui lòng nhập Tên Ingame!");
+        
+        const area = document.getElementById('tickFlowersArea');
+        area.classList.remove('hidden');
+        
+        const grid = document.getElementById('tickFlowersGrid');
+        const sortedFlowers = getMergedFlowers();
+        
+        grid.innerHTML = sortedFlowers.map(f => `
+            <div class="${rarityClass(f.rarity)} border-2 rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
+                <div class="absolute top-3 left-3">
+                    <input type="checkbox" data-flower-name="${f.name}" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
+                </div>
+                <img src="${f.image}" class="w-24 h-24 object-contain mt-4"/>
+                <h3 class="text-center font-black text-sm text-[#5f412e] mt-3 leading-tight uppercase">${f.name}</h3>
             </div>
-            <img src="${f.image}" class="w-24 h-24 object-contain mt-4"/>
-            <h3 class="text-center font-black text-sm text-[#5f412e] mt-3 leading-tight uppercase">${f.name}</h3>
-        </div>
-    `).join('');
-}
+        `).join('');
+    }
 
     function adminLogin(){ 
         const pass = prompt("Nhập mật khẩu kiểm soát quyền Admin"); 
@@ -231,32 +220,33 @@ function showFlowersForNewMember() {
     function rarityClass(r){ return 'rarity-' + (r==='HOA ĐỎ'?'red':r==='HOA CAM'?'orange':r==='HOA TÍM'?'purple':r==='HOA LAM'?'blue':'green'); }
 
     function getMergedFlowers(){
-      const map = {};
-      flowers.forEach((f)=>{
-        const key = f.name.trim().toUpperCase();
-        if(!map[key]) map[key] = { ...f, owners: f.owners || [] };
-      });
-      return Object.values(map).sort((a,b) => (rarityOrder[a.rarity]||6) - (rarityOrder[b.rarity]||6) || a.name.localeCompare(b.name));
+        const map = {};
+        flowers.forEach((f)=>{
+            const key = f.name.trim().toUpperCase();
+            if(!map[key]) map[key] = { ...f, owners: f.owners || [] };
+        });
+        return Object.values(map).sort((a,b) => (rarityOrder[a.rarity]||6) - (rarityOrder[b.rarity]||6) || a.name.localeCompare(b.name));
     }
 
     function renderSearch(data=getMergedFlowers()){
-      const grid = document.getElementById('searchGrid'); if(!grid) return;
-      grid.innerHTML = data.map(f=>`
-      <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
-        <div><div class="flex justify-center"><img src="${f.image}" class="flower-img w-32 h-32 object-contain"/></div><h2 class="text-center text-xl font-black text-[#5f412e] mt-4 leading-tight uppercase">${f.name}</h2></div>
-        <div class="mt-3 text-center"><div class="bg-white/80 py-1.5 rounded-full font-bold shadow text-sm text-gray-700">${f.flowerXu?'🪙 Hoa xu':'🎁 Hoa gói'}</div><div class="text-xs text-pink-600 font-bold mt-1.5">Sở hữu: ${f.owners ? f.owners.length : 0} 🌸</div></div>
-      </div>`).join('');
-      document.getElementById('totalFlowers').innerText = data.length;
+        const grid = document.getElementById('searchGrid'); if(!grid) return;
+        grid.innerHTML = data.map(f=>`
+        <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
+            <div><div class="flex justify-center"><img src="${f.image}" class="flower-img w-32 h-32 object-contain"/></div><h2 class="text-center text-xl font-black text-[#5f412e] mt-4 leading-tight uppercase">${f.name}</h2></div>
+            <div class="mt-3 text-center"><div class="bg-white/80 py-1.5 rounded-full font-bold shadow text-sm text-gray-700">${f.flowerXu?'🪙 Hoa xu':'🎁 Hoa gói'}</div><div class="text-xs text-pink-600 font-bold mt-1.5">Sở hữu: ${f.owners ? f.owners.length : 0} 🌸</div></div>
+        </div>`).join('');
+        document.getElementById('totalFlowers').innerText = data.length;
     }
 
     function searchFlowers(){
-      const key = document.getElementById('searchInput').value.toLowerCase().trim(); const rarity = document.getElementById('rarityFilter').value;
-      let data = getMergedFlowers();
-      if(key) data = data.filter(f=> f.name.toLowerCase().includes(key) || (f.owners && f.owners.some(o=>o.ingame.toLowerCase().includes(key))));
-      if(rarity) data = data.filter(f=> f.rarity === rarity);
-      renderSearch(data);
+        const key = document.getElementById('searchInput').value.toLowerCase().trim(); const rarity = document.getElementById('rarityFilter').value;
+        let data = getMergedFlowers();
+        if(key) data = data.filter(f=> f.name.toLowerCase().includes(key) || (f.owners && f.owners.some(o=>o.ingame.toLowerCase().includes(key))));
+        if(rarity) data = data.filter(f=> f.rarity === rarity);
+        renderSearch(data);
     }
 
+    style="height:auto; overflow:visible;"
     function showRarity(r) {
         const data = getMergedFlowers().filter(f => f.rarity === r);
         const totalCount = data.length;
@@ -265,9 +255,9 @@ function showFlowersForNewMember() {
                 🌸 Có tất cả <span class="text-pink-600">${totalCount}</span> loại hoa thuộc phẩm <span class="text-pink-600">${r}</span>
             </div>
             ` + data.map(f => `
-            <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
+            <div onclick="showFlowerOwners('${f.name.replace(/'/g, "\\'")}')" class="${rarityClass(f.rarity)} card rounded-[30px] p-4 shadow-lg flex flex-col justify-between">
                 <div>
-                    <div class="flex justify-center"><img src="${f.image}" class="flower-img w-28 h-28 object-contain"/></div>
+                    <div class="flex justify-center"><img src="${f.image}" class="w-28 h-28 object-contain"/></div>
                     <h2 class="text-center text-lg font-black mt-4 text-[#5f412e] leading-tight uppercase">${f.name}</h2>
                 </div>
                 <div class="mt-3 text-center">
@@ -317,37 +307,30 @@ function showFlowersForNewMember() {
     function closeFlowerOwnersModal(){ document.getElementById('flowerOwnersModal').style.display = 'none'; }
 
     function renderMembers(){
-    const totalDiv = document.getElementById('totalMembers');
-    const listDiv = document.getElementById('memberList');
-    
-    if(totalDiv) totalDiv.innerText = registeredMembers.length;
-    if(!listDiv) return;
-    
-    if (registeredMembers.length === 0) {
-        listDiv.innerHTML = `<p class="text-gray-400 italic col-span-full text-center py-4">Chưa có thành viên nào.</p>`;
-        return;
+        const totalDiv = document.getElementById('totalMembers');
+        const listDiv = document.getElementById('memberList');
+        if(totalDiv) totalDiv.innerText = registeredMembers.length;
+        if(!listDiv) return;
+        
+        if (registeredMembers.length === 0) {
+            listDiv.innerHTML = `<p class="text-gray-400 italic col-span-full text-center py-4">Chưa có thành viên nào.</p>`;
+            return;
+        }
+        listDiv.innerHTML = registeredMembers.sort((a, b) => {
+            if (!a.ingame) return 1;
+            if (!b.ingame) return -1;
+            return a.ingame.localeCompare(b.ingame);
+        }).map(m => {
+            const safeName = encodeURIComponent(m.ingame);
+            return `
+                <button onclick="showMemberFlowers(decodeURIComponent('${safeName}'))" 
+                        class="owner-box rounded-3xl p-5 text-left shadow-md hover:shadow-lg transition-all border border-pink-100 flex flex-col justify-center min-h-[85px] w-full bg-white">
+                    <div class="text-xl font-black text-[#1c5d4d] truncate w-full">🎮 ${m.ingame}</div>
+                    <div class="text-sm text-gray-500 mt-1 truncate w-full">💬 Zalo: ${m.zalo || 'Không có zalo'}</div>
+                </button>
+            `;
+        }).join('');
     }
-
-    // Thiết lập grid chuẩn hóa hiển thị toàn bộ
-    listDiv.className = "grid grid-cols-1 md:grid-cols-2 gap-5 w-full block mt-4";
-    listDiv.style.height = "auto";
-    listDiv.style.overflow = "visible";
-
-    listDiv.innerHTML = registeredMembers.sort((a, b) => {
-        if (!a.ingame) return 1;
-        if (!b.ingame) return -1;
-        return a.ingame.localeCompare(b.ingame);
-    }).map(m => {
-        const safeName = encodeURIComponent(m.ingame);
-        return `
-            <button onclick="showMemberFlowers(decodeURIComponent('${safeName}'))" 
-                    class="owner-box rounded-3xl p-5 text-left shadow-md hover:shadow-lg transition-all border border-pink-100 flex flex-col justify-center min-h-[85px] w-full bg-white">
-                <div class="text-xl font-black text-[#1c5d4d] truncate w-full">🎮 ${m.ingame}</div>
-                <div class="text-sm text-gray-500 mt-1 truncate w-full">💬 Zalo: ${m.zalo || 'Không có zalo'}</div>
-            </button>
-        `;
-    }).join('');
-}
 
     function updateTickUserSelect() {
         const select = document.getElementById('tickUserSelect');
@@ -358,75 +341,90 @@ function showFlowersForNewMember() {
     }
 
     function loadUserCurrentStatus() {
-    const selectedUser = document.getElementById('tickUserSelect').value;
-    const grid = document.getElementById('tickFlowersGrid');
-    const area = document.getElementById('tickFlowersArea');
-    
-    // --- BẮT ĐẦU ĐOẠN MỚI THÊM VÀO ---
-    // Làm sạch ô nhập của thành viên mới để tránh nhầm lẫn
-    document.getElementById('newMemberName').value = '';
-    document.getElementById('newMemberZalo').value = '';
-    // --- KẾT THÚC ĐOẠN MỚI ---
-    
-    // Kiểm tra nếu chưa chọn tên thì ẩn khu vực chọn hoa
-    if(!selectedUser) { 
-        if(area) area.classList.add('hidden'); 
-        return; 
-    }
-    if(area) area.classList.remove('hidden');
-
-    const sortedFlowers = getMergedFlowers();
-    
-    grid.innerHTML = sortedFlowers.map(f => {
-        // Kiểm tra an toàn: dùng || [] để tránh lỗi nếu f.owners là undefined
-        const ownersList = f.owners || [];
-        const isOwned = ownersList.some(o => 
-            o.ingame && o.ingame.toString().toLowerCase().trim() === selectedUser.toString().toLowerCase().trim()
-        );
+        const selectedUser = document.getElementById('tickUserSelect').value;
+        const grid = document.getElementById('tickFlowersGrid');
+        const area = document.getElementById('tickFlowersArea');
         
-        return `
-            <div class="${rarityClass(f.rarity)} border-2 ${isOwned ? 'border-pink-500 bg-pink-50/20' : 'border-transparent'} rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
-                <div class="absolute top-3 left-3">
-                    <input type="checkbox" data-flower-name="${f.name}" ${isOwned ? 'checked' : ''} onchange="toggleCardBorder(this)" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
+        document.getElementById('newMemberName').value = '';
+        document.getElementById('newMemberZalo').value = '';
+        
+        if(!selectedUser) { 
+            if(area) area.classList.add('hidden'); 
+            return; 
+        }
+        if(area) area.classList.remove('hidden');
+
+        const sortedFlowers = getMergedFlowers();
+        grid.innerHTML = sortedFlowers.map(f => {
+            const ownersList = f.owners || [];
+            const isOwned = ownersList.some(o => 
+                o.ingame && o.ingame.toString().toLowerCase().trim() === selectedUser.toString().toLowerCase().trim()
+            );
+            return `
+                <div class="${rarityClass(f.rarity)} border-2 ${isOwned ? 'border-pink-500 bg-pink-50/20' : 'border-transparent'} rounded-[25px] p-4 shadow flex flex-col justify-between items-center relative transition-all">
+                    <div class="absolute top-3 left-3">
+                        <input type="checkbox" data-flower-name="${f.name}" ${isOwned ? 'checked' : ''} onchange="toggleCardBorder(this)" class="w-6 h-6 accent-pink-500 cursor-pointer"/>
+                    </div>
+                    <img src="${f.image}" class="w-24 h-24 object-contain mt-4"/>
+                    <h3 class="text-center font-black text-sm text-[#5f412e] mt-3 leading-tight uppercase">${f.name}</h3>
                 </div>
-                <img src="${f.image}" class="w-24 h-24 object-contain mt-4"/>
-                <h3 class="text-center font-black text-sm text-[#5f412e] mt-3 leading-tight uppercase">${f.name}</h3>
-            </div>
-        `;
-    }).join('');
-}
+            `;
+        }).join('');
+    }
+
     function toggleCardBorder(chk) {
         const card = chk.closest('.rounded-\[25\px\]');
         if(chk.checked) { card.classList.add('border-pink-500', 'bg-pink-50/20'); } 
         else { card.classList.remove('border-pink-500', 'bg-pink-50/20'); }
     }
 
-    function submitUserRequest() {
-    const selectedUser = document.getElementById('tickUserSelect').value;
-    if(!selectedUser) return alert("Vui lòng chọn tên!");
+    async function submitUnifiedRequest() {
+        const name = document.getElementById('newMemberName').value.trim();
+        const zalo = document.getElementById('newMemberZalo').value.trim();
+        const selectedUser = document.getElementById('tickUserSelect').value;
+        
+        let finalName = "";
+        let finalZalo = "";
+        let requestType = "";
 
-    // SỬA: Lấy đúng danh sách hoa đã tích từ khu vực tickFlowersGrid
-    const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
-    let tickedList = [];
-    checkboxes.forEach(chk => {
-        if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
-    });
+        if (selectedUser) {
+            finalName = selectedUser;
+            const currentMem = registeredMembers.find(m => m.ingame === selectedUser);
+            finalZalo = currentMem ? currentMem.zalo : "";
+            requestType = 'UPDATE_EXISTING';
+        } else {
+            if(!name) return alert("Vui lòng nhập Tên Ingame hoặc Chọn một thành viên cũ!");
+            finalName = name;
+            finalZalo = zalo;
+            requestType = 'NEW_MEMBER';
+        }
 
-    // Cập nhật yêu cầu mới
-    updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== selectedUser.toLowerCase().trim());
-    updateRequests.push({
-        id: Date.now().toString(),
-        type: 'UPDATE_EXISTING', // Thêm type để phân biệt
-        ingame: selectedUser,
-        tickedFlowers: tickedList,
-        time: new Date().toLocaleString('vi-VN')
-    });
+        const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
+        let tickedList = [];
+        checkboxes.forEach(chk => {
+            if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
+        });
 
-    saveData();
-    renderAdminRequests(); // Cập nhật lại giao diện Admin ngay lập tức
-    alert(`🚀 Gửi yêu cầu thành công! Vui lòng đợi Admin kiểm tra và duyệt.`);
-    showSection('homeSection');
-}
+        if (requestType === 'UPDATE_EXISTING') {
+            updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== finalName.toLowerCase().trim());
+        }
+
+        updateRequests.push({ 
+            id: Date.now().toString(), 
+            type: requestType, 
+            ingame: finalName, 
+            zalo: finalZalo, 
+            tickedFlowers: tickedList,
+            time: new Date().toLocaleString('vi-VN')
+        });
+
+        await saveData();
+        alert("Đã gửi yêu cầu thành công! Vui lòng chờ Admin duyệt.");
+        
+        document.getElementById('newMemberName').value = '';
+        document.getElementById('newMemberZalo').value = '';
+        showSection('homeSection');
+    }
 
     function renderAdminRequests() {
         const listDiv = document.getElementById('adminRequestList');
@@ -441,21 +439,22 @@ function showFlowersForNewMember() {
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-yellow-200 flex flex-col gap-4">
                 ${r.type === 'NEW_MEMBER' ? `
                     <div>
-                        <div class="text-blue-700 font-black mb-1">🆕 Đăng ký thành viên mới</div>
+                        <div class="text-blue-700 font-black mb-1">🆕 Đăng ký thành viên mới & Chọn hoa</div>
                         <div class="font-bold text-lg">🎮 ${r.ingame} - 💬 ${r.zalo}</div>
+                        <div class="text-xs text-gray-500">Tích chọn: ${r.tickedFlowers?.length || 0} hoa</div>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="approveNewMember('${r.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm">Duyệt thành viên</button>
-                        <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm">Từ chối</button>
+                        <button onclick="approveNewMember('${r.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Duyệt thành viên + Hoa</button>
+                        <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm font-bold">Từ chối</button>
                     </div>
                 ` : `
                     <div>
-                        <div class="text-xl font-black text-amber-800">🎮 Thành viên: ${r.ingame}</div>
-                        <div class="text-sm font-bold">Cập nhật hoa: ${r.tickedFlowers?.length || 0} bông</div>
+                        <div class="text-xl font-black text-amber-800">🎮 Thành viên cũ: ${r.ingame}</div>
+                        <div class="text-sm font-bold text-gray-600">Cập nhật lại: ${r.tickedFlowers?.length || 0} bông hoa</div>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="approveRequest('${r.id}')" class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm">Duyệt cập nhật</button>
-                        <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm">Từ chối</button>
+                        <button onclick="approveRequest('${r.id}')" class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Duyệt cập nhật</button>
+                        <button onclick="rejectRequest('${r.id}')" class="bg-gray-200 px-4 py-2 rounded-xl text-sm font-bold">Từ chối</button>
                     </div>
                 `}
             </div>
@@ -463,173 +462,135 @@ function showFlowersForNewMember() {
     }
 
     async function approveNewMember(reqId) {
-    const req = updateRequests.find(r => r.id === reqId);
-    if (!req) return;
-    
-    // Thêm vào danh sách chính thức
-    registeredMembers.push({ ingame: req.ingame, zalo: req.zalo });
-    
-    // Xóa khỏi hàng đợi yêu cầu
-    updateRequests = updateRequests.filter(r => r.id !== reqId);
-    
-    // Ép buộc đợi lưu dữ liệu trực tiếp lên mạng
-    await saveData();
-    
-    renderAdminMembers();
-    renderAdminRequests();
-    renderMembers();
-    updateTickUserSelect();
-    alert("Đã duyệt và thêm thành viên mới lên hệ thống thành công!");
-}
-    function submitUnifiedRequest() {
-    const name = document.getElementById('newMemberName').value.trim();
-    const zalo = document.getElementById('newMemberZalo').value.trim();
-    
-    if(!name) return alert("Vui lòng nhập Tên Ingame!");
-
-    // Lấy danh sách hoa đã tích
-    const checkboxes = document.querySelectorAll('#tickFlowersGrid input[type="checkbox"]');
-    let tickedList = [];
-    checkboxes.forEach(chk => {
-        if(chk.checked) tickedList.push(chk.getAttribute('data-flower-name'));
-    });
-
-    // Đẩy yêu cầu vào hàng đợi
-    updateRequests.push({ 
-        id: Date.now().toString(), 
-        type: 'NEW_REGISTRATION', 
-        ingame: name, 
-        zalo: zalo, 
-        tickedFlowers: tickedList,
-        time: new Date().toLocaleString() 
-    });
-
-    saveData();
-    alert("Đã gửi yêu cầu! Admin sẽ duyệt cả thông tin thành viên và danh sách hoa của bạn.");
-    
-    // Reset form
-    document.getElementById('newMemberName').value = '';
-    document.getElementById('newMemberZalo').value = '';
-    showSection('homeSection');
-}
-    
-async function approveRequest(reqId) {
-    const req = updateRequests.find(r => r.id === reqId);
-    if(!req) return;
-
-    // Tự động kiểm tra và thêm người này vào danh sách thành viên nếu họ chưa tồn tại
-    const checkExist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === req.ingame.toLowerCase().trim());
-    if(!checkExist) {
-        registeredMembers.push({ ingame: req.ingame, zalo: req.zalo || '' });
-    }
-
-    // Gán hoa cho thành viên
-    flowers.forEach(f => {
-        if(!f.owners) f.owners = [];
+        const req = updateRequests.find(r => r.id === reqId);
+        if (!req) return;
         
-        // Gỡ tên cũ (để tránh trùng lặp khi cập nhật)
-        f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== req.ingame.toLowerCase().trim());
-        
-        // Thêm tên vào hoa nếu hoa đó có trong danh sách được tích
-        const isTargeted = req.tickedFlowers.some(name => name.trim().toUpperCase() === f.name.trim().toUpperCase());
-        if(isTargeted) {
-            f.owners.push({ ingame: req.ingame, zalo: req.zalo || '' });
+        const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === req.ingame.toLowerCase().trim());
+        if(!exist) {
+            registeredMembers.push({ ingame: req.ingame, zalo: req.zalo || '' });
         }
-    });
 
-    updateRequests = updateRequests.filter(r => r.id !== reqId);
-    
-    // Ép buộc đợi lưu lên Cloud
-    await saveData();
-    
-    renderAdminRequests();
-    renderAdminFlowers();
-    renderAdminMembers();
-    renderMembers();
-    updateTickUserSelect();
-    alert(`Đã duyệt thành công cho: ${req.ingame}`);
-}
+        flowers.forEach(f => {
+            if(!f.owners) f.owners = [];
+            f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== req.ingame.toLowerCase().trim());
+            const isTargeted = req.tickedFlowers.some(name => name.trim().toUpperCase() === f.name.trim().toUpperCase());
+            if(isTargeted) {
+                f.owners.push({ ingame: req.ingame, zalo: req.zalo || '' });
+            }
+        });
 
-    async function rejectRequest(reqId) {
-    if(confirm("Bạn có chắc muốn từ chối yêu cầu cập nhật này không?")) {
         updateRequests = updateRequests.filter(r => r.id !== reqId);
         await saveData();
-        renderAdminRequests();
-    }
-}
-
-    function renderAdminMembers() {
-    const div = document.getElementById('adminMemberList');
-    if (!div) return;
-    
-    if (registeredMembers.length === 0) {
-        div.innerHTML = `<div class="col-span-full text-gray-400 text-center py-4">Chưa có thành viên nào trên hệ thống.</div>`;
-        return;
-    }
-    
-    // Sắp xếp an toàn và ép kiểu grid tự động giãn theo dữ liệu (hủy bỏ bóp nghẹt chiều cao)
-    div.className = "grid grid-cols-1 md:grid-cols-3 gap-4 w-full block clear-both mt-3";
-    div.style.height = "auto";
-    div.style.overflow = "visible";
-    
-    div.innerHTML = registeredMembers.sort((a, b) => {
-        if (!a.ingame) return 1;
-        if (!b.ingame) return -1;
-        return a.ingame.localeCompare(b.ingame);
-    }).map(m => {
-        const safeName = encodeURIComponent(m.ingame);
-        return `
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-between items-center w-full min-h-[75px]">
-                <div class="overflow-hidden pr-2">
-                    <div class="font-bold text-gray-800 text-base truncate">🎮 ${m.ingame}</div>
-                    <div class="text-xs text-gray-500 truncate mt-0.5">💬 Zalo: ${m.zalo || 'Không'}</div>
-                </div>
-                <button onclick="deleteMemberTrietDe(decodeURIComponent('${safeName}'))" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl font-bold text-xs transition shrink-0">Xóa</button>
-            </div>
-        `;
-    }).join('');
-}
-    async function deleteMemberTrietDe(memberName) {
-    if(confirm(`XÓA TRIỆT ĐỂ thành viên [${memberName}]?`)) {
-        registeredMembers = registeredMembers.filter(m => m.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
-        flowers.forEach(f => { if(f.owners) f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim()); });
-        updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
-        await saveData();
+        
         renderAdminMembers();
-        renderAdminFlowers();
         renderAdminRequests();
+        renderAdminFlowers();
         renderMembers();
         updateTickUserSelect();
-        alert(`Đã hoàn tất xóa bỏ triệt để thành viên: ${memberName}`);
+        alert("Đã duyệt thành viên mới và kích hoạt kho hoa sở hữu!");
     }
-}
-   async function createNewMember() {
-    const name = document.getElementById('adminMemberName').value.trim();
-    const zalo = document.getElementById('adminMemberZalo').value.trim();
     
-    if(!name) return alert("Cần nhập tên Ingame!");
-    
-    const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === name.toLowerCase().trim());
-    if(exist) return alert("Thành viên này đã được đăng ký từ trước!");
-    
-    // Thêm vào mảng tạm
-    registeredMembers.push({ ingame: name, zalo: zalo });
-    
-    // Ép buộc đợi lưu dữ liệu lên Cloud thành công xong mới chạy tiếp
-    await saveData();
-    
-    renderAdminMembers();
-    renderMembers();
-    updateTickUserSelect();
-    
-    // Reset lại ô input sau khi thêm
-    document.getElementById('adminMemberName').value = '';
-    document.getElementById('adminMemberZalo').value = '';
-    
-    alert("Đã thêm thành viên hợp lệ mới thành công!");
-}
+    async function approveRequest(reqId) {
+        const req = updateRequests.find(r => r.id === reqId);
+        if(!req) return;
 
-    function createNewFlower() {
+        const checkExist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === req.ingame.toLowerCase().trim());
+        if(!checkExist) {
+            registeredMembers.push({ ingame: req.ingame, zalo: req.zalo || '' });
+        }
+
+        flowers.forEach(f => {
+            if(!f.owners) f.owners = [];
+            f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== req.ingame.toLowerCase().trim());
+            const isTargeted = req.tickedFlowers.some(name => name.trim().toUpperCase() === f.name.trim().toUpperCase());
+            if(isTargeted) {
+                f.owners.push({ ingame: req.ingame, zalo: req.zalo || '' });
+            }
+        });
+
+        updateRequests = updateRequests.filter(r => r.id !== reqId);
+        await saveData();
+        
+        renderAdminRequests();
+        renderAdminFlowers();
+        renderAdminMembers();
+        renderMembers();
+        updateTickUserSelect();
+        alert(`Đã duyệt thành công cho: ${req.ingame}`);
+    }
+
+    async function rejectRequest(reqId) {
+        if(confirm("Bạn có chắc muốn từ chối yêu cầu cập nhật này không?")) {
+            updateRequests = updateRequests.filter(r => r.id !== reqId);
+            await saveData();
+            renderAdminRequests();
+        }
+    }
+
+    function renderAdminMembers() {
+        const div = document.getElementById('adminMemberList');
+        if (!div) return;
+        
+        if (registeredMembers.length === 0) {
+            div.innerHTML = `<div class="col-span-full text-gray-400 text-center py-4">Chưa có thành viên nào trên hệ thống.</div>`;
+            return;
+        }
+        
+        div.innerHTML = registeredMembers.sort((a, b) => {
+            if (!a.ingame) return 1;
+            if (!b.ingame) return -1;
+            return a.ingame.localeCompare(b.ingame);
+        }).map(m => {
+            const safeName = encodeURIComponent(m.ingame);
+            return `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-between items-center w-full min-h-[75px]">
+                    <div class="overflow-hidden pr-2">
+                        <div class="font-bold text-gray-800 text-base truncate">🎮 ${m.ingame}</div>
+                        <div class="text-xs text-gray-500 truncate mt-0.5">💬 Zalo: ${m.zalo || 'Không'}</div>
+                    </div>
+                    <button onclick="deleteMemberTrietDe(decodeURIComponent('${safeName}'))" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl font-bold text-xs transition shrink-0">Xóa</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function deleteMemberTrietDe(memberName) {
+        if(confirm(`XÓA TRIỆT ĐỂ thành viên [${memberName}]?`)) {
+            registeredMembers = registeredMembers.filter(m => m.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
+            flowers.forEach(f => { if(f.owners) f.owners = f.owners.filter(o => o.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim()); });
+            updateRequests = updateRequests.filter(r => r.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
+            await saveData();
+            renderAdminMembers();
+            renderAdminFlowers();
+            renderAdminRequests();
+            renderMembers();
+            updateTickUserSelect();
+            alert(`Đã hoàn tất xóa bỏ triệt để thành viên: ${memberName}`);
+        }
+    }
+
+    async function createNewMember() {
+        const name = document.getElementById('adminMemberName').value.trim();
+        const zalo = document.getElementById('adminMemberZalo').value.trim();
+        
+        if(!name) return alert("Cần nhập tên Ingame!");
+        
+        const exist = registeredMembers.some(m => m.ingame.toLowerCase().trim() === name.toLowerCase().trim());
+        if(exist) return alert("Thành viên này đã được đăng ký từ trước!");
+        
+        registeredMembers.push({ ingame: name, zalo: zalo });
+        await saveData();
+        
+        renderAdminMembers();
+        renderMembers();
+        updateTickUserSelect();
+        
+        document.getElementById('adminMemberName').value = '';
+        document.getElementById('adminMemberZalo').value = '';
+        alert("Đã thêm thành viên hợp lệ mới thành công!");
+    }
+
+    async function createNewFlower() {
         const flowerName = document.getElementById('flowerName').value.trim();
         const imageUrl = document.getElementById('flowerImageUrl').value.trim();
         if (!flowerName || !imageUrl) return alert("Vui lòng điền đủ Tên hoa và Link ảnh!");
@@ -642,7 +603,7 @@ async function approveRequest(reqId) {
             flowerXu: document.getElementById('flowerType').value === 'xu' ? 1 : 0,
             owners: []
         });
-        saveData();
+        await saveData();
         renderAdminFlowers();
         document.getElementById('flowerName').value = '';
         document.getElementById('flowerImageUrl').value = '';
@@ -663,7 +624,7 @@ async function approveRequest(reqId) {
              <span class="text-xs font-black text-gray-600 block mb-1">Thành viên sở hữu chính thức (${f.owners ? f.owners.length : 0}):</span>
              <div class="flex flex-wrap gap-1 mt-1">
                 ${f.owners && f.owners.length > 0 ? f.owners.map((o, oIdx) => `
-                   <button onclick="removeOwnerFromFlower(${fIdx}, ${oIdx}, '${o.ingame.replace(/'/g, "\'")}')" 
+                   <button onclick="removeOwnerFromFlower(${fIdx}, ${oIdx}, '${o.ingame.replace(/'/g, "\\'")}')" 
                            class="bg-white/90 border border-gray-200 hover:bg-red-500 hover:text-white hover:border-red-500 text-xs px-2 py-1 rounded-md font-bold transition flex items-center gap-1 group">
                       🎮 ${o.ingame} <span class="text-red-500 group-hover:text-white font-normal ml-0.5">×</span>
                    </button>
@@ -671,7 +632,7 @@ async function approveRequest(reqId) {
              </div>
           </div>
           <div class="grid grid-cols-2 gap-3 mt-4">
-             <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition flex items-center justify-center gap-1">
+             <button onclick="clearAllOwnersFromFlower(${fIdx}, '${f.name.replace(/'/g, "\\'")}')" class="bg-orange-500 text-white py-2 rounded-xl text-sm font-black hover:bg-orange-600 transition flex items-center justify-center gap-1">
                 🧹 Xóa sạch người sở hữu
              </button>
              <button onclick="delFlow(${fIdx})" class="bg-red-600 text-white py-2 rounded-xl text-sm font-black hover:bg-red-700 transition flex items-center justify-center gap-1">
@@ -681,32 +642,31 @@ async function approveRequest(reqId) {
         </div>`).join('');
     }
 
-    // Hàm xóa lẻ thành viên (Đã thêm mới)
-    function removeOwnerFromFlower(flowerIdx, ownerIdx, ingame) {
+    async function removeOwnerFromFlower(flowerIdx, ownerIdx, ingame) {
         if (confirm(`Xóa thành viên [${ingame}] khỏi bông hoa này?`)) {
             flowers[flowerIdx].owners.splice(ownerIdx, 1);
-            saveData();
+            await saveData();
             renderAdminFlowers();
         }
     }
 
-    function clearAllOwnersFromFlower(flowerIdx, flowerName) {
+    async function clearAllOwnersFromFlower(flowerIdx, flowerName) {
         if (confirm(`⚠️ Bạn có CỰC KỲ CHẮC CHẮN muốn xoá TOÀN BỘ thành viên đang sở hữu hoa [${flowerName}] không?`)) {
             flowers[flowerIdx].owners = [];
-            saveData();
+            await saveData();
             renderAdminFlowers();
             renderSearch();
             alert(`Đã reset hoa [${flowerName}] về trạng thái trống thành công!`);
         }
     }
     
-    function delFlow(i) { if(confirm("Xóa hẳn loại hoa này?")) { flowers.splice(i, 1); saveData(); renderAdminFlowers(); } }
-    function clearAllFlowers(){ if(confirm('Xóa hết tất cả hoa?')){ flowers=[]; saveData(); renderAdminFlowers(); } }
+    async function delFlow(i) { if(confirm("Xóa hẳn loại hoa này?")) { flowers.splice(i, 1); await saveData(); renderAdminFlowers(); } }
+    async function clearAllFlowers(){ if(confirm('Xóa hết tất cả hoa?')){ flowers=[]; await saveData(); renderAdminFlowers(); } }
 
-    function clearAllOwnersFromAllFlowers() {
+    async function clearAllOwnersFromAllFlowers() {
         if (confirm("⚠️ CẢNH BÁO: Xóa sạch toàn bộ dữ liệu sở hữu của tất cả các loài hoa?")) {
             flowers.forEach(f => { f.owners = []; });
-            saveData();
+            await saveData();
             renderAdminFlowers();
             renderSearch();
             alert("✨ Đã gỡ bỏ toàn bộ thành viên sở hữu của tất cả các loài hoa thành công!");
@@ -724,32 +684,58 @@ async function approveRequest(reqId) {
         updateTickUserSelect();
     });
 </script>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     
-    const firebaseConfig = { apiKey: "AIzaSyAip9TsFQLFVYfTCafngZh81W6saGWqEvQ", authDomain: "dvdhoa.firebaseapp.com", projectId: "dvdhoa", storageBucket: "dvdhoa.firebasestorage.app", messagingSenderId: "895700989452", appId: "1:895700989452:web:06ed440fbe3b6aafd1a029", measurementId: "G-2MBFFLEKP3" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyAip9TsFQLFVYfTCafngZh81W6saGWqEvQ", 
+        authDomain: "dvdhoa.firebaseapp.com", 
+        projectId: "dvdhoa", 
+        storageBucket: "dvdhoa.firebasestorage.app", 
+        messagingSenderId: "895700989452", 
+        appId: "1:895700989452:web:06ed440fbe3b6aafd1a029", 
+        measurementId: "G-2MBFFLEKP3" 
+    };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const dataRef = doc(db, "dvdflower", "data");
     
+    // ĐỊNH NGHĨA HÀM LƯU ĐỒNG BỘ TOÀN CỤC Ở ĐÂY ĐỂ TRÁNH TRỄ NHỊP ĐỒNG BỘ
+    window.saveData = async function() {
+        localStorage.setItem('dvdFlowers', JSON.stringify(flowers)); 
+        localStorage.setItem('dvdMembers', JSON.stringify(registeredMembers)); 
+        localStorage.setItem('dvdRequests', JSON.stringify(updateRequests)); 
+        
+        try {
+            await setDoc(dataRef, { flowers, registeredMembers, updateRequests });
+            console.log("Đã đồng bộ lên Firebase mạng thành công!");
+        } catch (error) {
+            console.error("Lỗi đẩy Cloud Firebase:", error);
+        }
+    };
+    
+    // Lắng nghe dữ liệu trực tiếp liên tục từ Firebase
     onSnapshot(dataRef, (snap) => { 
         if(snap.exists()){ 
             const cloudData = snap.data();
             flowers = cloudData.flowers || []; 
             registeredMembers = cloudData.registeredMembers || []; 
             updateRequests = cloudData.updateRequests || []; 
+            
             localStorage.setItem('dvdFlowers', JSON.stringify(flowers)); 
             localStorage.setItem('dvdMembers', JSON.stringify(registeredMembers)); 
             localStorage.setItem('dvdRequests', JSON.stringify(updateRequests)); 
-            renderSearch(); renderMembers(); renderAdminFlowers(); renderAdminMembers(); renderAdminRequests();
+            
+            renderSearch(); 
+            renderMembers(); 
+            renderAdminFlowers(); 
+            renderAdminMembers(); 
+            renderAdminRequests();
             updateTickUserSelect(); 
         } 
     });
-    
-    window.saveCloudData = async function(){ 
-        await setDoc(dataRef, { flowers, registeredMembers, updateRequests }); 
-    };
 </script>
 </body>
 </html>
