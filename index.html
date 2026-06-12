@@ -72,7 +72,7 @@
 
     <div id="memberSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
         <h2 class="text-4xl font-black mb-6">👥 Danh sách thành viên (<span id="totalMembers">0</span>)</h2>
-        <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+       <div id="memberList" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
     </div>
 
     <div id="flowerSection" class="section bg-white/80 backdrop-blur rounded-[35px] p-6 shadow-xl mt-6">
@@ -317,10 +317,37 @@ function showFlowersForNewMember() {
     function closeFlowerOwnersModal(){ document.getElementById('flowerOwnersModal').style.display = 'none'; }
 
     function renderMembers(){
-        document.getElementById('totalMembers').innerText = registeredMembers.length;
-        document.getElementById('memberList').innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m=>`
-            <button onclick="showMemberFlowers('${m.ingame.replace(/'/g, "\'")}')" class="owner-box rounded-3xl p-5 text-left shadow"><div class="text-2xl font-black text-[#1c5d4d]">🎮 ${m.ingame}</div><div class="text-gray-600">💬 ${m.zalo||'Không có zalo'}</div></button>`).join('');
+    const totalDiv = document.getElementById('totalMembers');
+    const listDiv = document.getElementById('memberList');
+    
+    if(totalDiv) totalDiv.innerText = registeredMembers.length;
+    if(!listDiv) return;
+    
+    if (registeredMembers.length === 0) {
+        listDiv.innerHTML = `<p class="text-gray-400 italic col-span-full text-center py-4">Chưa có thành viên nào.</p>`;
+        return;
     }
+
+    // Thiết lập grid chuẩn hóa hiển thị toàn bộ
+    listDiv.className = "grid grid-cols-1 md:grid-cols-2 gap-5 w-full block mt-4";
+    listDiv.style.height = "auto";
+    listDiv.style.overflow = "visible";
+
+    listDiv.innerHTML = registeredMembers.sort((a, b) => {
+        if (!a.ingame) return 1;
+        if (!b.ingame) return -1;
+        return a.ingame.localeCompare(b.ingame);
+    }).map(m => {
+        const safeName = encodeURIComponent(m.ingame);
+        return `
+            <button onclick="showMemberFlowers(decodeURIComponent('${safeName}'))" 
+                    class="owner-box rounded-3xl p-5 text-left shadow-md hover:shadow-lg transition-all border border-pink-100 flex flex-col justify-center min-h-[85px] w-full bg-white">
+                <div class="text-xl font-black text-[#1c5d4d] truncate w-full">🎮 ${m.ingame}</div>
+                <div class="text-sm text-gray-500 mt-1 truncate w-full">💬 Zalo: ${m.zalo || 'Không có zalo'}</div>
+            </button>
+        `;
+    }).join('');
+}
 
     function updateTickUserSelect() {
         const select = document.getElementById('tickUserSelect');
@@ -517,22 +544,36 @@ function approveRequest(reqId) {
     }
 
     function renderAdminMembers() {
-        const div = document.getElementById('adminMemberList');
-        if(registeredMembers.length === 0) {
-            div.innerHTML = `<div class="col-span-full text-gray-400 text-center">Chưa có thành viên nào trên hệ thống.</div>`;
-            return;
-        }
-        div.innerHTML = registeredMembers.sort((a,b)=>a.ingame.localeCompare(b.ingame)).map(m => `
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
-                <div>
-                    <div class="font-bold text-gray-800">🎮 ${m.ingame}</div>
-                    <div class="text-xs text-gray-500">💬 Zalo: ${m.zalo || 'Không'}</div>
-                </div>
-                <button onclick="deleteMemberTrietDe('${m.ingame.replace(/'/g, "\'")}')" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded-lg font-bold text-xs transition">Xóa</button>
-            </div>
-        `).join('');
+    const div = document.getElementById('adminMemberList');
+    if (!div) return;
+    
+    if (registeredMembers.length === 0) {
+        div.innerHTML = `<div class="col-span-full text-gray-400 text-center py-4">Chưa có thành viên nào trên hệ thống.</div>`;
+        return;
     }
-
+    
+    // Sắp xếp an toàn và ép kiểu grid tự động giãn theo dữ liệu (hủy bỏ bóp nghẹt chiều cao)
+    div.className = "grid grid-cols-1 md:grid-cols-3 gap-4 w-full block clear-both mt-3";
+    div.style.height = "auto";
+    div.style.overflow = "visible";
+    
+    div.innerHTML = registeredMembers.sort((a, b) => {
+        if (!a.ingame) return 1;
+        if (!b.ingame) return -1;
+        return a.ingame.localeCompare(b.ingame);
+    }).map(m => {
+        const safeName = encodeURIComponent(m.ingame);
+        return `
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex justify-between items-center w-full min-h-[75px]">
+                <div class="overflow-hidden pr-2">
+                    <div class="font-bold text-gray-800 text-base truncate">🎮 ${m.ingame}</div>
+                    <div class="text-xs text-gray-500 truncate mt-0.5">💬 Zalo: ${m.zalo || 'Không'}</div>
+                </div>
+                <button onclick="deleteMemberTrietDe(decodeURIComponent('${safeName}'))" class="bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-xl font-bold text-xs transition shrink-0">Xóa</button>
+            </div>
+        `;
+    }).join('');
+}
     function deleteMemberTrietDe(memberName) {
         if(confirm(`XÓA TRIỆT ĐỂ thành viên [${memberName}]?`)) {
             registeredMembers = registeredMembers.filter(m => m.ingame.toLowerCase().trim() !== memberName.toLowerCase().trim());
